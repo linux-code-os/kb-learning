@@ -345,6 +345,11 @@ export const translations = {
   "sim.filterSell": { ru: "Продажи", en: "Sells" },
   "sim.filterByCoin": { ru: "По монете", en: "By coin" },
   "sim.filteredCount": { ru: "показано", en: "shown" },
+  "sim.searchPlaceholder": { ru: "Поиск по журналу...", en: "Search history..." },
+  "sim.searchNoResults": { ru: "Ничего не найдено", en: "No matches" },
+  "sim.clickToCopy": { ru: "Кликните, чтобы скопировать", en: "Click to copy" },
+  "sim.copied": { ru: "Скопировано", en: "Copied" },
+  "sim.copyValue": { ru: "Копировать значение", en: "Copy value" },
 } as const;
 
 export type Lang = "ru" | "en";

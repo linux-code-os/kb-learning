@@ -43,6 +43,27 @@ export function CrossRates() {
   // Hover-подсветка строки и колонки (как в Excel)
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [hoverCol, setHoverCol] = React.useState<number | null>(null);
+  const [toast, setToast] = React.useState<string | null>(null);
+  const toastTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showToast = React.useCallback((msg: string) => {
+    setToast(msg);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 1800);
+  }, []);
+
+  const copyValue = React.useCallback(
+    async (from: string, to: string, rate: number) => {
+      const text = `1 ${from} = ${formatRate(rate)} ${to}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(pick({ ru: "Скопировано", en: "Copied" }, lang));
+      } catch {
+        showToast(pick({ ru: "Не удалось скопировать", en: "Copy failed" }, lang));
+      }
+    },
+    [lang, showToast],
+  );
 
   return (
     <section id="rates" className="relative py-16 sm:py-20">
@@ -144,12 +165,41 @@ export function CrossRates() {
                               setHoverRow(null);
                               setHoverCol(null);
                             }}
+                            onClick={
+                              isSelf
+                                ? undefined
+                                : () => copyValue(from.symbol, to.symbol, rate)
+                            }
+                            role={isSelf ? undefined : "button"}
+                            tabIndex={isSelf ? -1 : 0}
+                            onKeyDown={
+                              isSelf
+                                ? undefined
+                                : (e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      copyValue(from.symbol, to.symbol, rate);
+                                    }
+                                  }
+                            }
+                            aria-label={
+                              isSelf
+                                ? undefined
+                                : `${t("sim.copyValue")}: 1 ${from.symbol} = ${formatRate(rate)} ${to.symbol}`
+                            }
+                            title={
+                              isSelf
+                                ? undefined
+                                : t("sim.clickToCopy")
+                            }
                             className={`p-2 font-mono tabular-nums transition-colors duration-100 ${
                               isSelf
-                                ? "text-muted-foreground/40"
-                                : isHighlighted
-                                  ? "rounded bg-emerald-500/10 text-emerald-500"
-                                  : "text-foreground/80"
+                                ? "cursor-default text-muted-foreground/40"
+                                : `cursor-pointer select-none ${
+                                    isHighlighted
+                                      ? "rounded bg-emerald-500/15 text-emerald-500"
+                                      : "text-foreground/80 hover:bg-emerald-500/10 hover:text-emerald-500"
+                                  }`
                             }`}
                           >
                             {isSelf ? "—" : formatRate(rate)}
@@ -180,6 +230,17 @@ export function CrossRates() {
                   )}
             </p>
           </Card>
+
+          {/* Toast для click-to-copy */}
+          {toast && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="pointer-events-none fixed bottom-6 left-1/2 z-[70] -translate-x-1/2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white shadow-xl"
+            >
+              {toast}
+            </div>
+          )}
         </motion.div>
       </div>
     </section>

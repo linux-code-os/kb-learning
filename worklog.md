@@ -607,3 +607,60 @@ Task: Assess current project status, perform QA via agent-browser, then add trad
 - **Keyboard navigation в matrix**: hover работает мышью, но keyboard nav через tab по ячейкам не настроен.
 
 Приоритет следующего раунда: Lighthouse performance audit + lazy-mount нижних секций, либо click-to-copy в cross-rates, либо текстовый поиск в trade history.
+
+---
+Task ID: 11
+Agent: main (Z.ai Code) — cron webDevReview round 10
+Task: Assess current project status, perform QA via agent-browser, then add click-to-copy in cross-rates + text search in trade history + styling polish.
+
+## Текущий статус проекта (оценка на старте раунда)
+- После раунда 10: 18 секций, Trade Simulator с filtering + cross-rates highlighting, lint чист.
+- Рекомендации прошлого раунда: click-to-copy в cross-rates, текстовый поиск в trade history, Lighthouse.
+
+## Цели и выполненные изменения
+
+**1. Click-to-copy в cross-rates matrix** — `cross-rates.tsx`
+- Ячейки матрицы теперь кликабельны: `role="button"`, `tabIndex={0}`, `cursor-pointer`.
+- `copyValue(from, to, rate)` — копирует `1 BTC = 19.6268 ETH` в clipboard через `navigator.clipboard.writeText`.
+- Keyboard support: Enter/Space триггерят копирование (a11y).
+- Toast "Скопировано / Copied" с `aria-live="polite"`, fixed внизу по центру, auto-dismiss 1.8с.
+- `title` атрибут "Кликните, чтобы скопировать" (native tooltip).
+- `aria-label` с полным значением курса для скринридеров.
+- Hover-эффект: `hover:bg-emerald-500/10 hover:text-emerald-500` + `select-none`.
+- Диагональ (same coin) не кликабельна: `cursor-default`, без role/handlers.
+- 5 новых translation keys: sim.searchPlaceholder, sim.searchNoResults, sim.clickToCopy, sim.copied, sim.copyValue.
+
+**2. Текстовый поиск в trade history** — `trade-simulator.tsx`
+- Новый state `searchQuery: string`.
+- `filteredTrades` useMemo расширен: после фильтра по табу применяет текстовый поиск по symbol/side/amount/price/realizedPnl (case-insensitive).
+- UI: search input с Search иконкой слева, clear-кнопкой (X) справа, появляется только когда есть сделки.
+- Styling: `h-8 rounded-lg border-border/60 bg-muted/40`, emerald focus-ring.
+- При непустом запросе фильтрует сделки в реальном времени.
+- Clear-кнопка сбрасывает запрос.
+- Переводы: sim.searchPlaceholder ("Поиск по журналу... / Search history...").
+
+**3. Styling polish**
+- Cross-rates cells: `cursor-pointer select-none` + hover bg/text color.
+- Search input: компактный `h-8` с иконкой, focus-ring emerald.
+- Toast для copy: fixed bottom-center, rounded-full, shadow-xl.
+
+## Результаты верификации (agent-browser)
+- **18 секций**, 0 ошибок браузера, 0 проблем в консоли, lint чист.
+- **Click-to-copy**: клик на ячейку BTC→ETH → toast "Скопировано" появляется, значение копируется в clipboard.
+- **Text search**: создал 2 сделки (buy 0.1 BTC, buy 0.5 ETH).
+  - Search "ETH" → показывает только ETH сделку (BTC отфильтрован).
+  - Search "btc" → показывает только BTC сделку (case-insensitive работает).
+  - Clear → показывает все.
+- **Адаптив**: моб 390×844 — 0 горизонтального скролла.
+- **VLM-оценка**: cross-rates **8/10** — "clean dark aesthetic, clear typography"; search **9/10** — "sleek modern dark theme, intuitive icons, professional fintech dashboard".
+- **Lint**: 0 ошибок, 0 предупреждений.
+
+## Нерешённые вопросы / риски / рекомендации на следующий раунд
+- **Lighthouse performance audit**: всё ещё не прогонял. 18 секций + live store + search + copy — стоит проверить LCP/CLS/TBT формально.
+- **Static export для GitHub Pages**: `output: "export"` несовместим с API routes. Нужно вынести github-stats в клиентский fetch (CORS) + сторонний сервис для subscribe.
+- **Keyboard navigation в matrix**: Tab работает (tabIndex=0), но visual focus-ring на ячейках не настроен — стоит добавить `focus-visible:ring`.
+- **Search debounce**: сейчас поиск фильтрует на каждый keystroke. Для большого количества сделок можно debounce.
+- **Copy history**: можно показать всплывающую историю скопированных значений.
+- **Dev-server нестабилен**: sandbox убивает процесс. Нужен supervisor.
+
+Приоритет следующего раунда: Lighthouse performance audit + lazy-mount нижних секций, либо focus-visible polish на matrix ячейках, либо debounce для search.

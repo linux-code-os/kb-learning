@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Activity,
   Download,
+  Search,
 } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
 import { Card } from "@/components/ui/card";
@@ -166,6 +167,7 @@ export function TradeSimulator() {
   const [limitPrice, setLimitPrice] = React.useState("");
   const [toast, setToast] = React.useState<{ msg: string; type: "ok" | "err" } | null>(null);
   const [tradeFilter, setTradeFilter] = React.useState<"all" | "buy" | "sell" | string>("all");
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [coinCount, setCoinCount] = React.useState<6 | 9 | 12>(() => {
     try {
       const saved = localStorage.getItem("kb-sim-coin-count");
@@ -481,14 +483,27 @@ export function TradeSimulator() {
 
   const pnlPositive = totalPnl >= 0;
 
-  // Фильтрация сделок для журнала
+  // Фильтрация сделок для журнала (по табу + по текстовому поиску)
   const filteredTrades = React.useMemo(() => {
-    if (tradeFilter === "all") return trades;
-    if (tradeFilter === "buy") return trades.filter((tr) => tr.side === "buy");
-    if (tradeFilter === "sell") return trades.filter((tr) => tr.side === "sell");
-    // иначе — фильтр по символу монеты
-    return trades.filter((tr) => tr.symbol === tradeFilter);
-  }, [trades, tradeFilter]);
+    let result = trades;
+    if (tradeFilter === "buy") result = result.filter((tr) => tr.side === "buy");
+    else if (tradeFilter === "sell") result = result.filter((tr) => tr.side === "sell");
+    else if (tradeFilter !== "all") result = result.filter((tr) => tr.symbol === tradeFilter);
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      result = result.filter((tr) => {
+        return (
+          tr.symbol.toLowerCase().includes(q) ||
+          tr.side.toLowerCase().includes(q) ||
+          String(tr.amount).includes(q) ||
+          String(tr.price).includes(q) ||
+          (tr.realizedPnl != null && String(tr.realizedPnl).includes(q))
+        );
+      });
+    }
+    return result;
+  }, [trades, tradeFilter, searchQuery]);
 
   // Уникальные символы из сделок для фильтра "по монете"
   const tradeSymbols = React.useMemo(
@@ -784,6 +799,31 @@ export function TradeSimulator() {
                         {sym}
                       </button>
                     ))}
+                  </div>
+                )}
+
+                {/* Текстовый поиск */}
+                {trades.length > 0 && (
+                  <div className="relative mb-3">
+                    <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={t("sim.searchPlaceholder")}
+                      aria-label={t("sim.searchPlaceholder")}
+                      className="h-8 w-full rounded-lg border border-border/60 bg-muted/40 pl-8 pr-7 text-xs text-foreground placeholder:text-muted-foreground/70 focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/30"
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery("")}
+                        aria-label={t("sim.clearHistory")}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    )}
                   </div>
                 )}
 
