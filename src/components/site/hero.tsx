@@ -12,6 +12,33 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { siteConfig, stats } from "@/lib/site-data";
+import { useCountUp } from "@/lib/use-count-up";
+
+function StatCell({
+  value,
+  suffix,
+  label,
+}: {
+  value: number;
+  suffix: string;
+  label: string;
+}) {
+  const { value: animated, ref } = useCountUp(value);
+  return (
+    <div className="bg-background/80 p-5 text-center backdrop-blur">
+      <div
+        ref={ref}
+        className="font-mono text-2xl font-bold tabular-nums tracking-tight sm:text-3xl"
+      >
+        {animated}
+        <span className="text-gradient-brand">{suffix}</span>
+      </div>
+      <div className="mt-1 text-xs text-muted-foreground sm:text-sm">
+        {label}
+      </div>
+    </div>
+  );
+}
 
 function CoinChip({
   symbol,
@@ -122,7 +149,7 @@ export function Hero() {
             <Button
               asChild
               size="lg"
-              className="h-12 w-full gap-2 rounded-full bg-emerald-600 px-7 text-base text-white shadow-xl shadow-emerald-600/25 transition hover:bg-emerald-500 sm:w-auto"
+              className="h-12 w-full gap-2 rounded-full bg-emerald-600 px-7 text-base text-white shadow-xl shadow-emerald-600/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-500 hover:shadow-emerald-500/40 sm:w-auto"
             >
               <a
                 href={siteConfig.flagshipRepo}
@@ -194,10 +221,11 @@ export function Hero() {
                 </span>
               </div>
               <div className="mt-2 flex items-end gap-2">
-                <span className="text-3xl font-bold tracking-tight">
+                <span className="font-mono text-3xl font-bold tabular-nums tracking-tight">
                   $48,219.40
                 </span>
-                <span className="mb-1 text-xs font-semibold text-emerald-500">
+                <span className="mb-1 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-xs font-semibold text-emerald-500">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
                   +12.8%
                 </span>
               </div>
@@ -274,18 +302,12 @@ export function Hero() {
           className="mx-auto mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 sm:grid-cols-4"
         >
           {stats.map((s) => (
-            <div
+            <StatCell
               key={s.label}
-              className="bg-background/80 p-5 text-center backdrop-blur"
-            >
-              <div className="text-2xl font-bold tracking-tight sm:text-3xl">
-                {s.value}
-                <span className="text-gradient-brand">{s.suffix}</span>
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                {s.label}
-              </div>
-            </div>
+              value={s.value}
+              suffix={s.suffix}
+              label={s.label}
+            />
           ))}
         </motion.div>
 

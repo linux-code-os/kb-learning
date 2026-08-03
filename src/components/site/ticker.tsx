@@ -28,9 +28,9 @@ export function Ticker() {
               className="flex shrink-0 items-center gap-2 text-sm"
             >
               <span className="font-semibold">{t.symbol}</span>
-              <span className="text-muted-foreground">{t.price}</span>
+              <span className="font-mono text-muted-foreground tabular-nums">{t.price}</span>
               <span
-                className={`font-mono text-xs font-medium ${
+                className={`font-mono text-xs font-medium tabular-nums ${
                   t.up ? "text-emerald-500" : "text-rose-500"
                 }`}
               >

@@ -328,6 +328,133 @@ export const navLinks: { href: string; label: string }[] = [
   { href: "#features", label: "Возможности" },
   { href: "#tech", label: "Технологии" },
   { href: "#library", label: "Библиотека" },
+  { href: "#roadmap", label: "Roadmap" },
+  { href: "#faq", label: "FAQ" },
   { href: "#start", label: "Запуск" },
   { href: "#connect", label: "Контакты" },
+];
+
+/**
+ * FAQ — частые вопросы.
+ */
+export type Faq = { question: string; answer: string };
+
+export const faqs: Faq[] = [
+  {
+    question: "KB Wallet — это настоящее крипто-приложение?",
+    answer:
+      "Нет. Это образовательный проект. Торговый симулятор использует вымышленные балансы, а цены подгружаются из публичного API CoinRanking. Никаких реальных средств, реальных бирж или реальных транзакций — только тренировка и обучение.",
+  },
+  {
+    question: "Нужно ли платить, чтобы пользоваться?",
+    answer:
+      "Нет, проект полностью бесплатный и open-source. Код доступен на GitHub под лицензией проекта. Вы можете собрать приложение сами, изучить исходники или даже контрибьютить.",
+  },
+  {
+    question: "На каких платформах работает KB Wallet?",
+    answer:
+      "Android и iOS из одной кодовой базы Kotlin Multiplatform. Compose Multiplatform отрисовывает один и тот же UI на обеих платформах, а бизнес-логика живёт в общем модуле commonMain.",
+  },
+  {
+    question: "Можно ли потерять деньги в симуляторе?",
+    answer:
+      "Нет. Баланс симулирован — это просто число в локальной базе Room. Даже если вы «потеряете» всё на стоп-лоссе, вы просто обнулите виртуальный счёт и сможете начать заново. Это безопасная песочница для тренировки.",
+  },
+  {
+    question: "Какие ордера поддерживает торговый симулятор?",
+    answer:
+      "Рыночные, лимитные и стоп-ордера. Движок рынка в фоне исполняет их по живым тикам цены — так вы тренируете разные типы заявок без риска, как на настоящей бирже.",
+  },
+  {
+    question: "Безопасны ли мои данные аккаунта?",
+    answer:
+      "Auth-сервер на Ktor хеширует пароли и выдаёт JWT-токены. Для локальной разработки используются безопасные дефолты, но перед любым реальным деплоем обязательно задайте JWT_SECRET через переменную окружения.",
+  },
+  {
+    question: "Могу ли я помочь проекту?",
+    answer:
+      "Да! Откройте репозиторий на GitHub, сделайте fork, заведите issue с идеей или багом, пришлите pull request. Особенно востребована помощь по iOS-обвязке и новые темы для крипто-библиотеки.",
+  },
+  {
+    question: "Подойдёт ли проект новичку в крипте?",
+    answer:
+      "Да. Внутри приложения есть справочник из 17 тем — от «что такое блокчейн» и «как работают кошельки» до DeFi и налогов. Начните с раздела «Основы», затем тренируйте сделки в симуляторе.",
+  },
+];
+
+/**
+ * Roadmap — вехи развития проекта.
+ */
+export type RoadmapItem = {
+  phase: string;
+  title: string;
+  description: string;
+  status: "done" | "active" | "planned";
+};
+
+export const roadmap: RoadmapItem[] = [
+  {
+    phase: "v0.1",
+    title: "Каркас KMP",
+    description:
+      "Настроен Kotlin Multiplatform модуль composeApp с commonMain, androidMain и iosMain. Базовый UI на Compose, навигация, Koin DI.",
+    status: "done",
+  },
+  {
+    phase: "v0.4",
+    title: "Портфель и цены",
+    description:
+      "Экран портфеля с холдингами, P&L и историей транзакций. Подключён CoinRanking API для живых цен, локальное хранение в Room.",
+    status: "done",
+  },
+  {
+    phase: "v0.7",
+    title: "Торговый симулятор",
+    description:
+      "Движок рынка в фоне исполняет лимитные и стоп-ордера по тикам цены. Флоу Buy/Sell с симулированным балансом без реальных средств.",
+    status: "done",
+  },
+  {
+    phase: "v1.0",
+    title: "Графики и библиотека",
+    description:
+      "Свечные графики с зумом и SMA, несколько таймфреймов. Встроенная крипто-библиотека из 17 тем — от основ до DeFi и налогов.",
+    status: "active",
+  },
+  {
+    phase: "v1.2",
+    title: "Аналитика и биометрия",
+    description:
+      "Разделение реализованной/нереализованной прибыли. Биометрический вход, усиленный auth-сервер на Ktor с JWT-токенами.",
+    status: "active",
+  },
+  {
+    phase: "v1.5",
+    title: "Watchlist и уведомления",
+    description:
+      "Список наблюдения за монетами вне портфеля. Push-уведомления о срабатывании ордеров и достижении ценовых целей.",
+    status: "planned",
+  },
+  {
+    phase: "v2.0",
+    title: "Социальные фичи",
+    description:
+      "Шаринг портфеля, публичные стратегии, рейтинги трейдеров симулятора. Расширение крипто-библиотеки новыми темами.",
+    status: "planned",
+  },
+];
+
+/**
+ * Демо-цены для конвертера (симулированные, как в KB Wallet).
+ */
+export const demoCoins: { symbol: string; name: string; priceUsd: number }[] = [
+  { symbol: "BTC", name: "Bitcoin", priceUsd: 67420.5 },
+  { symbol: "ETH", name: "Ethereum", priceUsd: 3518.2 },
+  { symbol: "SOL", name: "Solana", priceUsd: 182.41 },
+  { symbol: "BNB", name: "BNB", priceUsd: 612.88 },
+  { symbol: "XRP", name: "Ripple", priceUsd: 0.6234 },
+  { symbol: "ADA", name: "Cardano", priceUsd: 0.4521 },
+  { symbol: "DOGE", name: "Dogecoin", priceUsd: 0.1583 },
+  { symbol: "AVAX", name: "Avalanche", priceUsd: 38.92 },
+  { symbol: "USDT", name: "Tether", priceUsd: 1.0 },
 ];
