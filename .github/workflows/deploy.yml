@@ -1,14 +1,16 @@
-# Deploy KB Learning site to GitHub Pages (static export)
+# Деплой сайта KB Learning на GitHub Pages (статический экспорт)
 #
-# ВАЖНО: для статического экспорта на GitHub Pages нужно:
-#   1. Временно переключить next.config.ts на output: "export"
-#   2. Убрать/заменить API routes (output: "export" их не поддерживает)
-#      - github-stats: вынести в клиентский fetch к api.github.com (поддерживает CORS)
-#      - subscribe: заменить на сторонний сервис (Formspree, Getform) или убрать
-#   3. Задать basePath = "/KB_Learning" (имя репо) при деплое на корневой Pages
+# При пуше в main автоматически: собирает статический сайт → публикует на Pages.
+# URL: https://linux-code-dev.github.io/KB_Learning/
 #
-# Этот workflow собирает standalone-сборку и деплоит как статический сайт
-# через Next.js static export. См. README секцию "Деплой".
+# Что работает на GitHub Pages (статика):
+#   ✓ Все секции сайта (hero, simulator, converter, cross-rates, FAQ, и т.д.)
+#   ✓ GitHub stats (клиентский fetch к api.github.com, CORS поддерживается)
+#   ✓ localStorage persistence симулятора
+#   ✓ i18n RU/EN, тема, sparklines
+# Что НЕ работает (требует сервера):
+#   ✗ /api/subscribe — заменён на mailto fallback (открывает почтовый клиент)
+#   ✗ /api/og — динамическая OG-картинка (метаданные используют статичный /og.svg)
 
 name: Deploy to GitHub Pages
 
@@ -36,13 +38,18 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install deps
+      - name: Install dependencies
         run: bun install --frozen-lockfile
 
       - name: Build static export
         env:
-          NEXT_PUBLIC_GITHUB_REPO: linux-code-dev/KB_Learning
+          # Базовый путь для project pages: /KB_Learning
+          # Для user/org pages (username.github.io) — закомментируйте.
+          NEXT_PUBLIC_BASE_PATH: /KB_Learning
         run: bun run build:pages
+
+      - name: Add .nojekyll
+        run: touch out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

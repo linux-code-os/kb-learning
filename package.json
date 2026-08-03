@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
-    "build:pages": "NEXT_PUBLIC_STATIC_EXPORT=1 next build",
+    "build:pages": "cp next.pages.config.ts next.config.ts.bak && cp next.config.ts next.dev.config.ts.bak && cp next.pages.config.ts next.config.ts && next build && cp next.dev.config.ts.bak next.config.ts && rm -f next.dev.config.ts.bak next.config.ts.bak",
     "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
     "lint": "eslint .",
     "db:push": "prisma db push --accept-data-loss",

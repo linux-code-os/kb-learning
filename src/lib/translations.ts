@@ -45,8 +45,8 @@ export const translations = {
   "hero.title1": { ru: "Учим крипте", en: "Learning crypto" },
   "hero.title2": { ru: "на практике", en: "the practical way" },
   "hero.desc": {
-    ru: "KB Learning — экосистема проектов вокруг криптовалют. Флагман KB Wallet — кроссплатформенное приложение для портфеля, тренировки сделок и изучения основ крипты. Без реальных денег и рисков.",
-    en: "KB Learning is an ecosystem of projects around cryptocurrencies. The flagship, KB Wallet, is a cross-platform app for portfolio tracking, trade practice, and learning crypto fundamentals. No real money. No risk.",
+    ru: "KB Learning — экосистема проектов вокруг криптовалют. Флагман KB Learning — кроссплатформенное приложение для портфеля, тренировки сделок и изучения основ крипты. Без реальных денег и рисков.",
+    en: "KB Learning is an ecosystem of projects around cryptocurrencies. The flagship, KB Learning, is a cross-platform app for portfolio tracking, trade practice, and learning crypto fundamentals. No real money. No risk.",
   },
   "hero.balance": { ru: "Общий баланс", en: "Total balance" },
   "hero.simulation": { ru: "Симуляция", en: "Simulation" },
@@ -61,8 +61,8 @@ export const translations = {
 
   // ===== Ticker =====
   "ticker.disclaimer": {
-    ru: "Демо-данные · симуляция KB Wallet · не финансовая рекомендация",
-    en: "Demo data · KB Wallet simulation · not financial advice",
+    ru: "Демо-данные · симуляция KB Learning · не финансовая рекомендация",
+    en: "Demo data · KB Learning simulation · not financial advice",
   },
 
   // ===== Section headings (eyebrow / title / desc) =====
@@ -70,8 +70,8 @@ export const translations = {
   "gh.title": { ru: "Прозрачно.", en: "Transparent." },
   "gh.titleAccent": { ru: "Как open-source", en: "Like open-source" },
   "gh.desc": {
-    ru: "Метрики репозитория KB Wallet тянутся напрямую из GitHub API в реальном времени. Обновляется каждые 15 минут — без накруток и красивых циферок.",
-    en: "KB Wallet repository metrics are pulled live from the GitHub API. Refreshed every 15 minutes — no vanity metrics.",
+    ru: "Метрики репозитория KB Learning тянутся напрямую из GitHub API в реальном времени. Обновляется каждые 15 минут — без накруток и красивых циферок.",
+    en: "KB Learning repository metrics are pulled live from the GitHub API. Refreshed every 15 minutes — no vanity metrics.",
   },
   "gh.stars": { ru: "Звёзд на GitHub", en: "GitHub stars" },
   "gh.forks": { ru: "Форков", en: "Forks" },
@@ -83,7 +83,7 @@ export const translations = {
   "gh.visitRepo": { ru: "Зайти в репозиторий", en: "Visit repository" },
 
   "about.eyebrow": { ru: "О проекте", en: "About" },
-  "about.title1": { ru: "KB Wallet — крипто-портфель,", en: "KB Wallet — a crypto portfolio" },
+  "about.title1": { ru: "KB Learning — крипто-портфель,", en: "KB Learning — a crypto portfolio" },
   "about.title2": { ru: "который учит", en: "that teaches" },
   "about.desc": {
     ru: "Compose Multiplatform приложение для Android и iOS из одной кодовой базы Kotlin. Отслеживайте портфель, практикуйте сделки в безопасном симуляторе и изучайте основы криптовалют — от устройства блокчейна до чтения свечных графиков.",
@@ -96,8 +96,8 @@ export const translations = {
   },
   "about.eduTitle": { ru: "Образовательный проект", en: "Educational project" },
   "about.eduDesc": {
-    ru: "KB Wallet — учебное/демо-приложение. Ничто здесь не является финансовой рекомендацией. Торговый симулятор использует вымышленные балансы — никаких реальных денег и реальных бирж.",
-    en: "KB Wallet is a learning/demo app. Nothing here is financial advice. The trading simulator uses fictional balances — no real money and no real exchanges.",
+    ru: "KB Learning — учебное/демо-приложение. Ничто здесь не является финансовой рекомендацией. Торговый симулятор использует вымышленные балансы — никаких реальных денег и реальных бирж.",
+    en: "KB Learning is a learning/demo app. Nothing here is financial advice. The trading simulator uses fictional balances — no real money and no real exchanges.",
   },
   "about.learnTitle": { ru: "Учитесь без риска", en: "Learn without risk" },
   "about.learnDesc": {
@@ -110,16 +110,16 @@ export const translations = {
   "audience.title1": { ru: "Кому будет", en: "Who benefits" },
   "audience.titleAccent": { ru: "полезен проект", en: "from this project" },
   "audience.desc": {
-    ru: "KB Wallet — не «приложение для всех». У него чёткая аудитория, и каждой группе мы даём своё значение.",
-    en: "KB Wallet is not an app for everyone. It has a clear audience, and each group gets its own value.",
+    ru: "KB Learning — не «приложение для всех». У него чёткая аудитория, и каждой группе мы даём своё значение.",
+    en: "KB Learning is not an app for everyone. It has a clear audience, and each group gets its own value.",
   },
 
   "ecosystem.eyebrow": { ru: "Экосистема", en: "Ecosystem" },
   "ecosystem.title1": { ru: "Четыре проекта,", en: "Four projects," },
   "ecosystem.titleAccent": { ru: "один автор", en: "one author" },
   "ecosystem.desc": {
-    ru: "KB Learning объединяет несколько репозиториев. Главный — KB Wallet, флагман экосистемы. Вокруг — вспомогательные проекты: автоматизация, командная разработка и геодезические расчёты.",
-    en: "KB Learning unites several repositories. The main one is KB Wallet, the ecosystem flagship. Around it are supporting projects: automation, teamwork, and geodetic calculations.",
+    ru: "KB Learning объединяет несколько репозиториев. Главный — KB Learning, флагман экосистемы. Вокруг — вспомогательные проекты: автоматизация, командная разработка и геодезические расчёты.",
+    en: "KB Learning unites several repositories. The main one is KB Learning, the ecosystem flagship. Around it are supporting projects: automation, teamwork, and geodetic calculations.",
   },
   "ecosystem.allOpen": { ru: "Все проекты открыты на", en: "All projects are open on" },
   "ecosystem.flagship": { ru: "Флагман", en: "Flagship" },
@@ -128,8 +128,8 @@ export const translations = {
   "features.title1": { ru: "Всё для изучения крипты", en: "Everything to learn crypto" },
   "features.titleAccent": { ru: "в одном месте", en: "in one place" },
   "features.desc": {
-    ru: "KB Wallet собран как маленькая, но полноценная крипто-среда: портфель, торговля, графики, аналитика и встроенная библиотека знаний.",
-    en: "KB Wallet is built as a small but complete crypto environment: portfolio, trading, charts, analytics, and a built-in knowledge library.",
+    ru: "KB Learning собран как маленькая, но полноценная крипто-среда: портфель, торговля, графики, аналитика и встроенная библиотека знаний.",
+    en: "KB Learning is built as a small but complete crypto environment: portfolio, trading, charts, analytics, and a built-in knowledge library.",
   },
 
   "tech.eyebrow": { ru: "Технологии", en: "Tech stack" },
@@ -157,14 +157,14 @@ export const translations = {
     en: "The reference is built right into the app. No need to google in fragments — the basics are gathered in one place and structured by level.",
   },
   "library.topics": { ru: "тем", en: "topics" },
-  "library.offline": { ru: "Библиотека доступна офлайн внутри KB Wallet", en: "The library is available offline inside KB Wallet" },
+  "library.offline": { ru: "Библиотека доступна офлайн внутри KB Learning", en: "The library is available offline inside KB Learning" },
   "library.group.basics": { ru: "Основы", en: "Basics" },
   "library.group.trading": { ru: "Трейдинг", en: "Trading" },
   "library.group.advanced": { ru: "Продвинутое", en: "Advanced" },
 
   "converter.eyebrow": { ru: "Демо-инструмент", en: "Demo tool" },
   "converter.title1": { ru: "Конвертер криптовалют", en: "Crypto converter" },
-  "converter.titleAccent": { ru: "как в KB Wallet", en: "like in KB Wallet" },
+  "converter.titleAccent": { ru: "как в KB Learning", en: "like in KB Learning" },
   "converter.desc": {
     ru: "Попробуйте механику прямо в браузере. Цены симулированные — те же, что использует торговый симулятор приложения. Не финансовая рекомендация.",
     en: "Try the mechanics right in your browser. Prices are simulated — the same ones the app's trading simulator uses. Not financial advice.",
@@ -174,16 +174,16 @@ export const translations = {
   "converter.swap": { ru: "Поменять местами", en: "Swap" },
   "converter.rate": { ru: "Симулированные курсы · обновляются вручную", en: "Simulated rates · updated manually" },
   "converter.disclaimer": {
-    ru: "Демо-данные для иллюстрации работы конвертера. В реальном KB Wallet цены подгружаются из публичного API CoinRanking.",
-    en: "Demo data to illustrate how the converter works. In the real KB Wallet, prices are pulled from the public CoinRanking API.",
+    ru: "Демо-данные для иллюстрации работы конвертера. В реальном KB Learning цены подгружаются из публичного API CoinRanking.",
+    en: "Demo data to illustrate how the converter works. In the real KB Learning, prices are pulled from the public CoinRanking API.",
   },
 
   "testimonials.eyebrow": { ru: "Отзывы", en: "Testimonials" },
   "testimonials.title1": { ru: "Что говорят", en: "What" },
   "testimonials.titleAccent": { ru: "пользователи", en: "users say" },
   "testimonials.desc": {
-    ru: "Демо-отзывы от студентов, разработчиков и практиков, которые разбирались в крипте через KB Wallet. Честно — проект учебный, но подход рабочий.",
-    en: "Demo reviews from students, developers, and practitioners who explored crypto through KB Wallet. Honest note: it's an educational project, but the approach works.",
+    ru: "Демо-отзывы от студентов, разработчиков и практиков, которые разбирались в крипте через KB Learning. Честно — проект учебный, но подход рабочий.",
+    en: "Demo reviews from students, developers, and practitioners who explored crypto through KB Learning. Honest note: it's an educational project, but the approach works.",
   },
   "testimonials.prev": { ru: "Предыдущий отзыв", en: "Previous testimonial" },
   "testimonials.next": { ru: "Следующий отзыв", en: "Next testimonial" },
@@ -193,8 +193,8 @@ export const translations = {
   "roadmap.title1": { ru: "Куда движется", en: "Where the" },
   "roadmap.titleAccent": { ru: "экосистема", en: "ecosystem is heading" },
   "roadmap.desc": {
-    ru: "Развитие KB Wallet по вехам. Зелёное — сделано, янтарное — в активной разработке, серое — в планах. Roadmap обновляется по мере релизов.",
-    en: "KB Wallet development by milestones. Green — done, amber — in active development, grey — planned. The roadmap updates with each release.",
+    ru: "Развитие KB Learning по вехам. Зелёное — сделано, янтарное — в активной разработке, серое — в планах. Roadmap обновляется по мере релизов.",
+    en: "KB Learning development by milestones. Green — done, amber — in active development, grey — planned. The roadmap updates with each release.",
   },
   "roadmap.done": { ru: "Готово", en: "Done" },
   "roadmap.active": { ru: "В работе", en: "In progress" },
@@ -205,8 +205,8 @@ export const translations = {
   "faq.title1": { ru: "Частые вопросы", en: "Common questions," },
   "faq.titleAccent": { ru: "без воды", en: "no fluff" },
   "faq.desc": {
-    ru: "Собрали то, что чаще всего спрашивают о KB Wallet и экосистеме. Не нашли ответ — заведите issue на GitHub.",
-    en: "We collected what people ask most about KB Wallet and the ecosystem. Didn't find an answer? Open an issue on GitHub.",
+    ru: "Собрали то, что чаще всего спрашивают о KB Learning и экосистеме. Не нашли ответ — заведите issue на GitHub.",
+    en: "We collected what people ask most about KB Learning and the ecosystem. Didn't find an answer? Open an issue on GitHub.",
   },
   "faq.notFoundTitle": { ru: "Не нашли ответ?", en: "Didn't find an answer?" },
   "faq.notFoundDesc": {
@@ -266,7 +266,7 @@ export const translations = {
     ru: "Сообщение отправлено! Ответим в ближайшее время.",
     en: "Message sent! We'll reply shortly.",
   },
-  "contact.get.releases": { ru: "Уведомления о новых релизах KB Wallet", en: "Notifications about new KB Wallet releases" },
+  "contact.get.releases": { ru: "Уведомления о новых релизах KB Learning", en: "Notifications about new KB Learning releases" },
   "contact.get.topics": { ru: "Анонсы новых тем в крипто-библиотеке", en: "Announcements of new crypto-library topics" },
   "contact.get.answers": { ru: "Ответы на ваши вопросы", en: "Answers to your questions" },
   "contact.get.nospam": { ru: "Никакого спама — отписка в один клик", en: "No spam — unsubscribe in one click" },
@@ -297,8 +297,8 @@ export const translations = {
   "sim.title1": { ru: "Торговый симулятор", en: "Trading simulator" },
   "sim.titleAccent": { ru: "прямо в браузере", en: "right in your browser" },
   "sim.desc": {
-    ru: "Попробуйте механику KB Wallet: купите и продайте виртуальные монеты на симулированном балансе. Цены двигаются, P&L пересчитывается в реальном времени. Никаких реальных денег — только тренировка.",
-    en: "Try the KB Wallet mechanics: buy and sell virtual coins on a simulated balance. Prices move, P&L recalculates in real time. No real money — just practice.",
+    ru: "Попробуйте механику KB Learning: купите и продайте виртуальные монеты на симулированном балансе. Цены двигаются, P&L пересчитывается в реальном времени. Никаких реальных денег — только тренировка.",
+    en: "Try the KB Learning mechanics: buy and sell virtual coins on a simulated balance. Prices move, P&L recalculates in real time. No real money — just practice.",
   },
   "sim.balance": { ru: "Баланс (симуляция)", en: "Balance (simulated)" },
   "sim.holdingsValue": { ru: "Стоимость активов", en: "Holdings value" },
@@ -323,8 +323,8 @@ export const translations = {
   "sim.insufficientCoins": { ru: "Недостаточно монет", en: "Insufficient coins" },
   "sim.emptyPortfolio": { ru: "Портфель пуст — купите монеты, чтобы начать", en: "Portfolio is empty — buy coins to start" },
   "sim.disclaimer": {
-    ru: "Демо-симулятор. Цены генерируются случайно для иллюстрации. Никаких реальных средств. Как в KB Wallet.",
-    en: "Demo simulator. Prices are randomly generated for illustration. No real funds. Just like in KB Wallet.",
+    ru: "Демо-симулятор. Цены генерируются случайно для иллюстрации. Никаких реальных средств. Как в KB Learning.",
+    en: "Demo simulator. Prices are randomly generated for illustration. No real funds. Just like in KB Learning.",
   },
   "sim.priceUp": { ru: "Цена выросла", en: "Price up" },
   "sim.priceDown": { ru: "Цена упала", en: "Price down" },

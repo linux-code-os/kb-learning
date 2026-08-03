@@ -42,7 +42,7 @@ export function Ticker() {
         </div>
       </div>
       <div className="px-4 py-1.5 text-center text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70">
-        Демо-данные · симуляция KB Wallet · не финансовая рекомендация
+        Демо-данные · симуляция KB Learning · не финансовая рекомендация
       </div>
     </section>
   );

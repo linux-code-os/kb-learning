@@ -35,6 +35,8 @@ export function ContactForm() {
     setFeedback("");
 
     try {
+      // Пытаемся отправить через API route (работает на Node-хостинге: Vercel/Netlify).
+      // На статическом GitHub Pages вернёт 404 — тогда fallback на mailto.
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,6 +47,30 @@ export function ContactForm() {
           type: mode,
         }),
       });
+
+      if (res.status === 404) {
+        // Статический хостинг — fallback на mailto
+        const subject =
+          mode === "newsletter"
+            ? "KB Learning — Subscribe"
+            : `KB Learning — Question from ${name}`;
+        const body =
+          mode === "newsletter"
+            ? `Subscribe: ${email}`
+            : `Name: ${name}\nEmail: ${email}\n\n${message}`;
+        window.location.href = `mailto:hello@kblearning.dev?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        setStatus("success");
+        setFeedback(
+          mode === "newsletter"
+            ? t("contact.successNewsletter")
+            : t("contact.successContact"),
+        );
+        setEmail("");
+        setName("");
+        setMessage("");
+        return;
+      }
+
       const data = await res.json();
 
       if (!res.ok || !data.ok) {

@@ -13,8 +13,8 @@ export const siteConfig = {
     en: "Learning crypto the practical way",
   },
   description: {
-    ru: "Экосистема образовательных проектов вокруг криптовалют: KB Wallet — кроссплатформенное приложение для отслеживания портфеля, тренировки торговли и изучения основ крипты. Без реальных денег. Без рисков. Только знания.",
-    en: "An ecosystem of educational projects around cryptocurrencies: KB Wallet is a cross-platform app for portfolio tracking, trading practice, and learning crypto fundamentals. No real money. No risk. Just knowledge.",
+    ru: "Экосистема образовательных проектов вокруг криптовалют: KB Learning — кроссплатформенное приложение для отслеживания портфеля, тренировки торговли и изучения основ крипты. Без реальных денег. Без рисков. Только знания.",
+    en: "An ecosystem of educational projects around cryptocurrencies: KB Learning is a cross-platform app for portfolio tracking, trading practice, and learning crypto fundamentals. No real money. No risk. Just knowledge.",
   },
   // Главная ссылка на GitHub-профиль экосистемы
   github: "https://github.com/linux-code-dev",
@@ -49,7 +49,7 @@ export type EcosystemProject = {
 
 export const ecosystem: EcosystemProject[] = [
   {
-    name: "KB Wallet",
+    name: "KB Learning",
     repo: "KB_Learning",
     url: "https://github.com/linux-code-dev/KB_Learning",
     description: {
@@ -104,7 +104,7 @@ export const ecosystem: EcosystemProject[] = [
 ];
 
 /**
- * Возможности KB Wallet — флагманского продукта экосистемы.
+ * Возможности KB Learning — флагманского продукта экосистемы.
  */
 export type Feature = {
   title: LocalStr;
@@ -221,7 +221,7 @@ export const features: Feature[] = [
 ];
 
 /**
- * Технологический стек KB Wallet.
+ * Технологический стек KB Learning.
  */
 export type Tech = {
   name: string;
@@ -242,7 +242,7 @@ export const techStack: Tech[] = [
 ];
 
 /**
- * Структура проекта KB Wallet — для визуализации архитектуры.
+ * Структура проекта KB Learning — для визуализации архитектуры.
  */
 export const projectStructure = `KB_Learning/
 ├── composeApp/            # Общий KMP-клиент
@@ -254,7 +254,7 @@ export const projectStructure = `KB_Learning/
 └── server/                # Ktor-бэкенд: auth, аккаунты, токены`;
 
 /**
- * Темы крипто-библиотеки внутри KB Wallet (17 тем сгруппированы).
+ * Темы крипто-библиотеки внутри KB Learning (17 тем сгруппированы).
  * groupId — стабильный идентификатор группы для lookup-таблиц (accent).
  */
 export type LibraryGroup = {
@@ -469,8 +469,8 @@ export type Faq = { question: LocalStr; answer: LocalStr };
 export const faqs: Faq[] = [
   {
     question: {
-      ru: "KB Wallet — это настоящее крипто-приложение?",
-      en: "Is KB Wallet a real crypto app?",
+      ru: "KB Learning — это настоящее крипто-приложение?",
+      en: "Is KB Learning a real crypto app?",
     },
     answer: {
       ru: "Нет. Это образовательный проект. Торговый симулятор использует вымышленные балансы, а цены подгружаются из публичного API CoinRanking. Никаких реальных средств, реальных бирж или реальных транзакций — только тренировка и обучение.",
@@ -489,8 +489,8 @@ export const faqs: Faq[] = [
   },
   {
     question: {
-      ru: "На каких платформах работает KB Wallet?",
-      en: "Which platforms does KB Wallet support?",
+      ru: "На каких платформах работает KB Learning?",
+      en: "Which platforms does KB Learning support?",
     },
     answer: {
       ru: "Android и iOS из одной кодовой базы Kotlin Multiplatform. Compose Multiplatform отрисовывает один и тот же UI на обеих платформах, а бизнес-логика живёт в общем модуле commonMain.",
@@ -626,7 +626,7 @@ export const roadmap: RoadmapItem[] = [
 ];
 
 /**
- * Демо-цены для конвертера (симулированные, как в KB Wallet).
+ * Демо-цены для конвертера (симулированные, как в KB Learning).
  */
 export const demoCoins: { symbol: string; name: string; priceUsd: number }[] = [
   { symbol: "BTC", name: "Bitcoin", priceUsd: 67420.5 },

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   description: siteConfig.description.ru,
   keywords: [
     "KB Learning",
-    "KB Wallet",
+    "KB Learning",
     "криптовалюта",
     "обучение",
     "Kotlin Multiplatform",
@@ -42,13 +42,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
     description: siteConfig.description.ru,
-    url: "https://linux-code-dev.github.io",
+    url: "https://linux-code-dev.github.io/KB_Learning/",
     siteName: siteConfig.name,
     type: "website",
     locale: "ru_RU",
     images: [
       {
-        url: "/api/og",
+        // Статичный SVG — работает на GitHub Pages без API route.
+        url: "/og.svg",
         width: 1200,
         height: 630,
         alt: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
@@ -59,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
     description: siteConfig.description.ru,
-    images: ["/api/og"],
+    images: ["/og.svg"],
   },
 };
 

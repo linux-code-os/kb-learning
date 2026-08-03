@@ -123,60 +123,76 @@ export function TradeSimulator() {
   const { lang } = useLang();
   const t = useT();
 
-  // Инициализация монет: все 12 из demoCoins, с восстановлением сохранённых
-  // цен/истории из localStorage (если есть). Отображается только coinCount.
-  const [coins, setCoins] = React.useState<Coin[]>(() => {
-    const saved = loadState();
-    const savedMap = new Map(
-      saved?.coins?.map((c) => [c.symbol, c] as const) ?? [],
-    );
-    return demoCoins.map((d) => {
-      const s = savedMap.get(d.symbol);
-      return {
-        symbol: d.symbol,
-        name: d.name,
-        price: s?.price ?? d.priceUsd,
-        prevPrice: s?.price ?? d.priceUsd,
-        change24h: s?.change24h ?? (Math.random() - 0.5) * 12,
-        history:
-          s?.history && s.history.length >= 2 ? s.history : [d.priceUsd],
-      };
-    });
-  });
+  // Инициализация монет: детерминированные дефолты из demoCoins (без random,
+  // без localStorage) — это рендерится и на сервере, и на клиенте одинаково.
+  // Сохранённое состояние загружается в useEffect после mount.
+  const [coins, setCoins] = React.useState<Coin[]>(() =>
+    demoCoins.map((d) => ({
+      symbol: d.symbol,
+      name: d.name,
+      price: d.priceUsd,
+      prevPrice: d.priceUsd,
+      change24h: 0,
+      history: [d.priceUsd],
+    })),
+  );
 
-  const [balance, setBalance] = React.useState<number>(() => {
-    const saved = loadState();
-    return saved && typeof saved.balance === "number" ? saved.balance : START_BALANCE;
-  });
-  const [holdings, setHoldings] = React.useState<Holding[]>(() => {
-    const saved = loadState();
-    return saved?.holdings ?? [];
-  });
-  const [orders, setOrders] = React.useState<Order[]>(() => {
-    const saved = loadState();
-    return saved?.orders ?? [];
-  });
-  const [trades, setTrades] = React.useState<TradeRecord[]>(() => {
-    const saved = loadState();
-    return saved?.trades ?? [];
-  });
+  const [balance, setBalance] = React.useState<number>(START_BALANCE);
+  const [holdings, setHoldings] = React.useState<Holding[]>([]);
+  const [orders, setOrders] = React.useState<Order[]>([]);
+  const [trades, setTrades] = React.useState<TradeRecord[]>([]);
   const [selected, setSelected] = React.useState(0);
   const [side, setSide] = React.useState<"buy" | "sell">("buy");
   const [orderType, setOrderType] = React.useState<"market" | "limit">("market");
   const [amount, setAmount] = React.useState("");
   const [limitPrice, setLimitPrice] = React.useState("");
+
+  // Hydration-safe: загружаем сохранённое состояние только после mount.
+  // random для change24h тоже здесь, чтобы не было SSR/клиент-расхождения.
+  React.useEffect(() => {
+    const saved = loadState();
+    if (!saved) {
+      // Первый визит — задаём случайные change24h (только на клиенте)
+      setCoins((prev) =>
+        prev.map((c) => ({ ...c, change24h: (Math.random() - 0.5) * 12 })),
+      );
+      return;
+    }
+    const savedMap = new Map(
+      saved.coins?.map((c) => [c.symbol, c] as const) ?? [],
+    );
+    setCoins((prev) =>
+      prev.map((c) => {
+        const s = savedMap.get(c.symbol);
+        if (!s) return { ...c, change24h: (Math.random() - 0.5) * 12 };
+        return {
+          ...c,
+          price: s.price,
+          prevPrice: s.price,
+          change24h: s.change24h,
+          history: s.history && s.history.length >= 2 ? s.history : [s.price],
+        };
+      }),
+    );
+    if (typeof saved.balance === "number") setBalance(saved.balance);
+    if (Array.isArray(saved.holdings)) setHoldings(saved.holdings);
+    if (Array.isArray(saved.orders)) setOrders(saved.orders);
+    if (Array.isArray(saved.trades)) setTrades(saved.trades);
+  }, []);
   const [toast, setToast] = React.useState<{ msg: string; type: "ok" | "err" } | null>(null);
   const [tradeFilter, setTradeFilter] = React.useState<"all" | "buy" | "sell" | string>("all");
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [coinCount, setCoinCount] = React.useState<6 | 9 | 12>(() => {
+  const [coinCount, setCoinCount] = React.useState<6 | 9 | 12>(6);
+
+  // Загружаем сохранённое количество монет после mount (hydration-safe)
+  React.useEffect(() => {
     try {
       const saved = localStorage.getItem("kb-sim-coin-count");
-      if (saved === "9" || saved === "12") return Number(saved) as 9 | 12;
+      if (saved === "9" || saved === "12") setCoinCount(Number(saved) as 9 | 12);
     } catch {
       /* ignore */
     }
-    return 6;
-  });
+  }, []);
 
   // Видимые монеты (зависит от coinCount)
   const visibleCoins = coins.slice(0, coinCount);

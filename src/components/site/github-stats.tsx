@@ -16,6 +16,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCountUp } from "@/lib/use-count-up";
 import { siteConfig } from "@/lib/site-data";
+import { fetchGhStats } from "@/lib/github-stats-client";
 
 type Stats = {
   stars: number;
@@ -105,8 +106,10 @@ export function GitHubStats() {
   const load = React.useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/github-stats");
-      if (res.ok) setStats(await res.json());
+      // Клиентский fetch напрямую в GitHub API (CORS поддерживается).
+      // Работает и на GitHub Pages (без API routes), и на Node-хостинге.
+      const data = await fetchGhStats();
+      setStats(data as unknown as Stats);
     } catch {
       /* тихо — UI покажет fallback */
     } finally {
@@ -162,7 +165,7 @@ export function GitHubStats() {
               <span className="text-gradient-brand">Как open-source</span>
             </>
           }
-          description="Метрики репозитория KB Wallet тянутся напрямую из GitHub API в реальном времени. Обновляется каждые 15 минут — без накруток и красивых циферок."
+          description="Метрики репозитория KB Learning тянутся напрямую из GitHub API в реальном времени. Обновляется каждые 15 минут — без накруток и красивых циферок."
         />
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
