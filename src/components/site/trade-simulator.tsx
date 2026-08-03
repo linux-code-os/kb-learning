@@ -11,6 +11,7 @@ import {
   X,
   CheckCircle2,
   Activity,
+  Download,
 } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
 import { Card } from "@/components/ui/card";
@@ -22,6 +23,7 @@ import { useLang, useT } from "@/components/site/language-toggle";
 import { pick } from "@/lib/translations";
 import { demoCoins } from "@/lib/site-data";
 import { Sparkline } from "@/components/site/sparkline";
+import { useSimulatorStore } from "@/lib/simulator-store";
 
 // Симулированные монеты с начальной ценой
 type Coin = {
@@ -308,6 +310,14 @@ export function TradeSimulator() {
     return () => clearInterval(id);
   }, []);
 
+  // Синхронизация live-цен в shared store (для CrossRates)
+  const setStoreCoins = useSimulatorStore((s) => s.setCoins);
+  React.useEffect(() => {
+    setStoreCoins(
+      coins.map((c) => ({ symbol: c.symbol, price: c.price, change24h: c.change24h })),
+    );
+  }, [coins, setStoreCoins]);
+
   // Проверка лимитных ордеров при обновлении цен
   React.useEffect(() => {
     if (orders.length === 0) return;
@@ -422,6 +432,39 @@ export function TradeSimulator() {
       /* ignore */
     }
     showToast(pick({ ru: "Симулятор сброшен", en: "Simulator reset" }, lang), "ok");
+  };
+
+  const exportCsv = () => {
+    if (trades.length === 0) return;
+    const header = "time,symbol,side,type,amount,price,total,balance_after,realized_pnl\n";
+    const rows = trades
+      .map((tr) => {
+        const time = new Date(tr.executedAt).toISOString();
+        const pnl = tr.realizedPnl != null ? tr.realizedPnl.toFixed(2) : "";
+        return [
+          time,
+          tr.symbol,
+          tr.side,
+          tr.type,
+          tr.amount,
+          tr.price.toFixed(2),
+          tr.total.toFixed(2),
+          tr.balanceAfter.toFixed(2),
+          pnl,
+        ].join(",");
+      })
+      .join("\n");
+    const csv = header + rows;
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `kb-trades-${Date.now()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast(pick({ ru: "CSV экспортирован", en: "CSV exported" }, lang), "ok");
   };
 
   // Расчёт стоимости активов и P&L
@@ -648,12 +691,22 @@ export function TradeSimulator() {
                     {t("sim.tradeHistory")} ({trades.length})
                   </span>
                   {trades.length > 0 && (
-                    <button
-                      onClick={() => setTrades([])}
-                      className="text-[11px] text-muted-foreground transition hover:text-rose-500"
-                    >
-                      {t("sim.clearHistory")}
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={exportCsv}
+                        className="inline-flex items-center gap-1 text-[11px] text-muted-foreground transition hover:text-emerald-500"
+                        aria-label={t("sim.exportCsv")}
+                      >
+                        <Download className="h-3 w-3" />
+                        {t("sim.exportCsv")}
+                      </button>
+                      <button
+                        onClick={() => setTrades([])}
+                        className="text-[11px] text-muted-foreground transition hover:text-rose-500"
+                      >
+                        {t("sim.clearHistory")}
+                      </button>
+                    </div>
                   )}
                 </div>
                 {trades.length === 0 ? (

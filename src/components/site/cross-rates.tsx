@@ -2,12 +2,14 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
-import { Grid3x3 } from "lucide-react";
+import { Grid3x3, Radio } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useLang, useT } from "@/components/site/language-toggle";
 import { pick } from "@/lib/translations";
 import { demoCoins } from "@/lib/site-data";
+import { useSimulatorStore } from "@/lib/simulator-store";
 
 function formatRate(n: number): string {
   if (n >= 100) return n.toFixed(0);
@@ -19,8 +21,24 @@ function formatRate(n: number): string {
 export function CrossRates() {
   const { lang } = useLang();
   const t = useT();
-  // Берём 6 основных монет для матрицы 6×6
-  const coins = demoCoins.slice(0, 6);
+  const liveCoins = useSimulatorStore((s) => s.coins);
+
+  // Берём 6 основных монет. Цены — из live store (если есть), иначе из demoCoins.
+  const coins = React.useMemo(() => {
+    const symbols = ["BTC", "ETH", "SOL", "BNB", "XRP", "ADA"];
+    return symbols.map((sym) => {
+      const live = liveCoins.find((c) => c.symbol === sym);
+      const demo = demoCoins.find((c) => c.symbol === sym);
+      return {
+        symbol: sym,
+        name: demo?.name ?? sym,
+        price: live?.price ?? demo?.priceUsd ?? 1,
+        change24h: live?.change24h ?? 0,
+      };
+    });
+  }, [liveCoins]);
+
+  const isLive = liveCoins.length > 0;
 
   return (
     <section id="rates" className="relative py-16 sm:py-20">
@@ -37,8 +55,8 @@ export function CrossRates() {
           }
           description={pick(
             {
-              ru: "Сколько одной монеты стоит другая — симулированные курсы, как в конвертере KB Wallet. Удобно для оценки относительной стоимости без пересчёта через USD.",
-              en: "How much of one coin another coin is worth — simulated rates, like in the KB Wallet converter. Handy for judging relative value without converting through USD.",
+              ru: "Сколько одной монеты стоит другая — курсы обновляются вживую из торгового симулятора выше.",
+              en: "How much of one coin another coin is worth — rates update live from the trading simulator above.",
             },
             lang,
           )}
@@ -52,13 +70,24 @@ export function CrossRates() {
           className="mx-auto mt-10 max-w-4xl"
         >
           <Card className="overflow-hidden border-border/60 bg-card/60 p-4 sm:p-6">
-            <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-500">
-                <Grid3x3 className="h-4 w-4" />
+            <div className="mb-4 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-500">
+                  <Grid3x3 className="h-4 w-4" />
+                </div>
+                <h3 className="text-sm font-bold">
+                  {pick({ ru: "1 ед. по горизонтали = ? ед. по вертикали", en: "1 unit (row) = ? units (column)" }, lang)}
+                </h3>
               </div>
-              <h3 className="text-sm font-bold">
-                {pick({ ru: "1 ед. по горизонтали = ? ед. по вертикали", en: "1 unit (row) = ? units (column)" }, lang)}
-              </h3>
+              {isLive && (
+                <Badge
+                  variant="secondary"
+                  className="gap-1.5 bg-emerald-500/10 text-emerald-500"
+                >
+                  <Radio className="h-3 w-3 animate-pulse" />
+                  {pick({ ru: "Live", en: "Live" }, lang)}
+                </Badge>
+              )}
             </div>
 
             {/* Матрица */}
@@ -86,12 +115,12 @@ export function CrossRates() {
                         {from.symbol}
                       </td>
                       {coins.map((to) => {
-                        const rate = from.priceUsd / to.priceUsd;
+                        const rate = from.price / to.price;
                         const isSelf = from.symbol === to.symbol;
                         return (
                           <td
                             key={to.symbol}
-                            className={`p-2 font-mono tabular-nums ${
+                            className={`p-2 font-mono tabular-nums transition-colors ${
                               isSelf
                                 ? "text-muted-foreground/40"
                                 : "text-foreground/80"
@@ -108,13 +137,21 @@ export function CrossRates() {
             </div>
 
             <p className="mt-4 text-[11px] text-muted-foreground">
-              {pick(
-                {
-                  ru: "Демо-данные. В реальном KB Wallet курсы пересчитываются через live-цены CoinRanking API.",
-                  en: "Demo data. In the real KB Wallet, rates recalculate through live CoinRanking API prices.",
-                },
-                lang,
-              )}
+              {isLive
+                ? pick(
+                    {
+                      ru: "Цены обновляются каждые 2.5 сек из симулятора выше.",
+                      en: "Prices refresh every 2.5s from the simulator above.",
+                    },
+                    lang,
+                  )
+                : pick(
+                    {
+                      ru: "Демо-данные. Запустите симулятор выше, чтобы курсы стали live.",
+                      en: "Demo data. Run the simulator above to make rates live.",
+                    },
+                    lang,
+                  )}
             </p>
           </Card>
         </motion.div>

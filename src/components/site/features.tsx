@@ -66,16 +66,18 @@ export function Features() {
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.45, delay: (i % 4) * 0.06 }}
               >
-                <Card className="group relative h-full overflow-hidden border-border/60 bg-card/60 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-border">
+                <Card className="group relative h-full overflow-hidden border-border/60 bg-card/60 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-border hover:shadow-xl">
+                  {/* Subtle gradient overlay on hover */}
+                  <div className="pointer-events-none absolute inset-0 -z-0 bg-gradient-to-br from-emerald-500/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div
-                    className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl shadow-lg transition-shadow ${accentMap[feature.accent]}`}
+                    className={`relative mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-110 ${accentMap[feature.accent]}`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="text-base font-bold leading-snug">
+                  <h3 className="relative text-base font-bold leading-snug">
                     {pick(feature.title, lang)}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground">
                     {pick(feature.description, lang)}
                   </p>
                   <span className="pointer-events-none absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-emerald-500 to-amber-500 transition-all duration-500 group-hover:w-full" />
