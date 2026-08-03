@@ -458,3 +458,114 @@ export const demoCoins: { symbol: string; name: string; priceUsd: number }[] = [
   { symbol: "AVAX", name: "Avalanche", priceUsd: 38.92 },
   { symbol: "USDT", name: "Tether", priceUsd: 1.0 },
 ];
+
+/**
+ * Testimonials — отзывы об обучающем проекте.
+ * Помечены как «демо-отзыв» для честности: проект учебный.
+ */
+export type Testimonial = {
+  quote: string;
+  name: string;
+  role: string;
+  avatarColor: string;
+  initials: string;
+  rating: number;
+};
+
+export const testimonials: Testimonial[] = [
+  {
+    quote:
+      "Наконец понял, чем отличаются лимитный и стоп-ордер. Тренировался на симуляторе неделю — без страха потерять деньги. Теперь читаю графики увереннее.",
+    name: "Иван М.",
+    role: "Студент-разработчик",
+    avatarColor: "from-emerald-500 to-teal-600",
+    initials: "ИМ",
+    rating: 5,
+  },
+  {
+    quote:
+      "Крипто-библиотека — топ. 17 тем в одном месте, от блокчейна до налогов. Не нужно гуглить по крупицам. Всё внутри приложения, офлайн.",
+    name: "Анна К.",
+    role: "Junior QA",
+    avatarColor: "from-amber-500 to-orange-600",
+    initials: "АК",
+    rating: 5,
+  },
+  {
+    quote:
+      "Один Kotlin-код на Android и iOS — это магия Compose Multiplatform. Смотрю исходники как образец архитектуры feature-пакетов с Koin.",
+    name: "Дмитрий С.",
+    role: "Android-разработчик",
+    avatarColor: "from-rose-500 to-pink-600",
+    initials: "ДС",
+    rating: 5,
+  },
+  {
+    quote:
+      "Как новичок в крипте, боялся терминов вроде DeFi и токеномика. В приложении они разложены по полочкам. Без хайпа, по делу.",
+    name: "Мария В.",
+    role: "Дизайнер",
+    avatarColor: "from-teal-500 to-cyan-600",
+    initials: "МВ",
+    rating: 4,
+  },
+  {
+    quote:
+      "Биометрический вход и JWT-сервер — приятный бонус к учебному проекту. Видно, что сделано с пониманием безопасности, а не «для галочки».",
+    name: "Павел Р.",
+    role: "Backend-разработчик",
+    avatarColor: "from-lime-500 to-emerald-600",
+    initials: "ПР",
+    rating: 5,
+  },
+  {
+    quote:
+      "Использую как песочницу для тестов торговых стратегий. Движок рынка в фоне честно исполняет ордера по тикам — не «нарисованная» прибыль.",
+    name: "Сергей Л.",
+    role: "Data-аналитик",
+    avatarColor: "from-violet-500 to-fuchsia-600",
+    initials: "СЛ",
+    rating: 5,
+  },
+];
+
+/**
+ * Варианты «для кого» проект — карточки аудитории.
+ */
+export type Audience = {
+  icon: "graduation" | "code" | "chart" | "shield";
+  title: string;
+  description: string;
+  accent: string;
+};
+
+export const audiences: Audience[] = [
+  {
+    icon: "graduation",
+    title: "Новичкам в крипте",
+    description:
+      "От «что такое блокчейн» до понимания бирж и ордеров. Без воды и хайпа — только основы, которые работают.",
+    accent: "emerald",
+  },
+  {
+    icon: "code",
+    title: "Разработчикам",
+    description:
+      "Образец Kotlin Multiplatform архитектуры: feature-пакеты, Koin DI, Ktor-сервер, Room. Читайте исходники — это открытый код.",
+    accent: "amber",
+  },
+  {
+    icon: "chart",
+    title: "Трейдерам-практикам",
+    description:
+      "Тренируйте рыночные, лимитные и стоп-ордера на симулированном балансе. Движок рынка честно исполняет заявки по тикам.",
+    accent: "teal",
+  },
+  {
+    icon: "shield",
+    title: "Любопытным",
+    description:
+      "Хотите разобраться, как работают кошельки, приватные ключи и JWT-авторизация? Смотрите реализацию — код открыт.",
+    accent: "rose",
+  },
+];

@@ -1,0 +1,61 @@
+# Deploy KB Learning site to GitHub Pages (static export)
+#
+# ВАЖНО: для статического экспорта на GitHub Pages нужно:
+#   1. Временно переключить next.config.ts на output: "export"
+#   2. Убрать/заменить API routes (output: "export" их не поддерживает)
+#      - github-stats: вынести в клиентский fetch к api.github.com (поддерживает CORS)
+#      - subscribe: заменить на сторонний сервис (Formspree, Getform) или убрать
+#   3. Задать basePath = "/KB_Learning" (имя репо) при деплое на корневой Pages
+#
+# Этот workflow собирает standalone-сборку и деплоит как статический сайт
+# через Next.js static export. См. README секцию "Деплой".
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Build static export
+        env:
+          NEXT_PUBLIC_GITHUB_REPO: linux-code-dev/KB_Learning
+        run: bun run build:pages
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

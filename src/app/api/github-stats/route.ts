@@ -25,12 +25,18 @@ export async function GET() {
   }
 
   try {
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       Accept: "application/vnd.github+json",
       "User-Agent": "kb-learning-site",
     };
 
-    // Без токена — лимит 60 запросов/час с одного IP, для визитки хватит.
+    // Если задан GITHUB_TOKEN — прокидываем Authorization для повышения
+    // rate limit с 60 до 5000 запросов/час. Без токена работает, но лимит ниже.
+    const token = process.env.GITHUB_TOKEN;
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     const [repoRes, userRes] = await Promise.all([
       fetch("https://api.github.com/repos/linux-code-dev/KB_Learning", {
         headers,

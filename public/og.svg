@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0a0f0d"/>
+      <stop offset="1" stop-color="#0d1a16"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="80" y1="280" x2="700" y2="280" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10b981"/>
+      <stop offset="0.5" stop-color="#2dd4bf"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="logoGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10b981"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M56 0H0V56" fill="none" stroke="#ffffff" stroke-opacity="0.04" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="980" cy="120" r="320" fill="url(#glow1)"/>
+  <circle cx="200" cy="560" r="280" fill="url(#glow2)"/>
+
+  <!-- Logo + brand -->
+  <g transform="translate(80, 70)">
+    <rect width="64" height="64" rx="16" fill="#0a0f0d" stroke="#10b981" stroke-opacity="0.3"/>
+    <path d="M20 16h14a10 10 0 0 1 4 19.2L42 48H33l-4-11h-1v11h-8V16zm8 7v8h5a4 4 0 0 0 0-8h-5z" fill="url(#logoGrad)"/>
+    <circle cx="48" cy="18" r="3" fill="#f59e0b"/>
+    <text x="84" y="30" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#ffffff">KB Learning</text>
+    <text x="84" y="54" font-family="Arial, sans-serif" font-size="13" font-weight="500" fill="#94a3b8" letter-spacing="2">CRYPTO ECOSYSTEM</text>
+  </g>
+
+  <!-- Headline -->
+  <text x="80" y="300" font-family="Arial, sans-serif" font-size="76" font-weight="800" fill="#ffffff">Учим крипте</text>
+  <text x="80" y="390" font-family="Arial, sans-serif" font-size="76" font-weight="800" fill="url(#brand)">на практике</text>
+
+  <!-- Subtitle -->
+  <text x="80" y="450" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#cbd5e1">Образовательная экосистема · open-source · без реальных денег</text>
+
+  <!-- Tags -->
+  <g transform="translate(80, 500)">
+    <rect width="170" height="40" rx="20" fill="#10b981" fill-opacity="0.12" stroke="#10b981" stroke-opacity="0.3"/>
+    <circle cx="22" cy="20" r="4" fill="#10b981"/>
+    <text x="36" y="26" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#10b981">Kotlin Multiplatform</text>
+
+    <g transform="translate(186, 0)">
+      <rect width="140" height="40" rx="20" fill="#f59e0b" fill-opacity="0.12" stroke="#f59e0b" stroke-opacity="0.3"/>
+      <circle cx="22" cy="20" r="4" fill="#f59e0b"/>
+      <text x="36" y="26" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#f59e0b">Android + iOS</text>
+    </g>
+
+    <g transform="translate(342, 0)">
+      <rect width="120" height="40" rx="20" fill="#2dd4bf" fill-opacity="0.12" stroke="#2dd4bf" stroke-opacity="0.3"/>
+      <circle cx="22" cy="20" r="4" fill="#2dd4bf"/>
+      <text x="36" y="26" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#2dd4bf">17 тем</text>
+    </g>
+  </g>
+
+  <!-- URL bottom -->
+  <text x="80" y="585" font-family="Arial, sans-serif" font-size="16" font-weight="500" fill="#64748b">github.com/linux-code-dev/KB_Learning</text>
+
+  <!-- Decorative chart line -->
+  <g transform="translate(760, 200)" opacity="0.9">
+    <path d="M0 200 L40 180 L80 190 L120 140 L160 160 L200 90 L240 110 L280 50 L320 70 L360 20" stroke="#10b981" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M0 200 L40 180 L80 190 L120 140 L160 160 L200 90 L240 110 L280 50 L320 70 L360 20 L360 240 L0 240 Z" fill="#10b981" fill-opacity="0.15"/>
+    <circle cx="360" cy="20" r="6" fill="#10b981"/>
+    <circle cx="360" cy="20" r="12" fill="#10b981" fill-opacity="0.3"/>
+  </g>
+</svg>

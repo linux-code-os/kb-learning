@@ -100,3 +100,58 @@ Task: Assess current project status, perform QA via agent-browser, then independ
 - **Деплой на GitHub Pages**: нужен `next.config` output adjustment для статического экспорта или GitHub Action. Текущий `output: "standalone"` рассчитан на Node-хостинг.
 
 Приоритет следующего раунда: OG-image + Lighthouse-аудит производительности (если времени хватит — добавить lazy-загрузку нижних секций).
+
+---
+Task ID: 3
+Agent: main (Z.ai Code) — cron webDevReview round 2
+Task: Assess current project status, perform QA via agent-browser, then add new features and improve styling for the KB Learning landing page.
+
+## Текущий статус проекта (оценка на старте раунда)
+- После раунда 2: сайт стабилен, 13 секций, тёмная тема, count-up, GitHub stats API, конвертер, roadmap, FAQ.
+- QA через agent-browser: 0 ошибок браузера, 0 горизонтального скролла на мобиле, перформанс 1.2s load / 33KB transfer, lint чист.
+- Из рекомендаций прошлого раунда: OG-image, i18n, статический экспорт для GitHub Pages, GitHub token для rate-limit, больше контента.
+
+## Цели и выполненные изменения (8 крупных + 3 мелких)
+
+**Новые секции (3):**
+1. **Audience (для кого)** (`audience.tsx`) — 4 карточки аудитории (новичкам/разработчикам/трейдерам/любопытным) с цветными иконками (GraduationCap/Code2/LineChart/ShieldCheck) и анимированной подчёркивающей полосой.
+2. **Testimonials (отзывы)** (`testimonials.tsx`) — карусель из 6 демо-отзывов: большая активная карточка со звездным рейтингом + 3 мини-карточки сбоку, автопрокрутка каждые 6 сек, управление стрелками и точками, анимация смены через AnimatePresence.
+3. **ContactForm (связаться)** (`contact-form.tsx`) — табы Подписка/Вопрос, поля email/имя/сообщение с валидацией, char-счётчик, состояния loading/success/error, success-сообщение с анимацией.
+
+**Новые API routes (2):**
+4. **`/api/og`** (`route.ts`) — генерирует OG-image PNG 1200×630 из SVG через sharp (density 144, PNG compressionLevel 9), кешируется в памяти после первого рендера. Источник SVG — `public/og.svg` (бренд KB Learning, заголовок, теги, декоративный график). Возвращает валидный PNG 61KB.
+5. **`/api/subscribe`** (`route.ts`) — приём подписок/вопросов: валидация email (regex), для contact-режима проверка имени (≥2) и сообщения (≥10), антиспам (≤5 заявок с email в памяти), in-memory хранилище, GET для отладки счётчиков.
+
+**Улучшения существующих (3):**
+6. **OG metadata** — в `layout.tsx` добавлены openGraph.images и twitter.images → `/api/og` (1200×630), теперь превью ссылок в соцсетях будет с брендом.
+7. **GitHub token support** — `/api/github-stats` теперь читает `process.env.GITHUB_TOKEN` и прокидывает `Authorization: Bearer` для повышения rate limit с 60 до 5000 запросов/час. Без токена работает как раньше.
+8. **LanguageToggle RU/EN** (`language-toggle.tsx`) — dropdown с флагами 🇷🇺/🇬🇧, React Context + localStorage, обёрнут в LanguageProvider в layout. Переключатель добавлен в Header рядом с ThemeToggle.
+
+**Деплой (2):**
+9. **GitHub Actions workflow** (`.github/workflows/deploy.yml`) — автоматический деплой на GitHub Pages при push в main: bun install → build:pages → upload-pages-artifact → deploy-pages. Содержит инструкцию по переключению на `output: "export"`.
+10. **`build:pages` script** в package.json — `NEXT_PUBLIC_STATIC_EXPORT=1 next build` для статического экспорта.
+
+**Данные (2):**
+11. **site-data.ts расширен** — 6 testimonials (с рейтингами и avatar-градиентами), 4 audience-карточки. navLinks обновлён.
+
+## Результаты верификации (agent-browser)
+- **16 секций** с id (было 13, +3: audience, testimonials, contact-form).
+- **0 ошибок браузера**, 0 проблем в консоли.
+- **OG API**: HTTP 200, валидный PNG 1200×630 61KB (подтверждено `file`).
+- **Subscribe API**: POST с валидным email → 200 + success-message; POST с `bad` email → 422 + "Введите корректный email"; GET → счётчик заявок.
+- **Testimonials карусель**: 6 точек навигации, кнопки prev/next, автопрокрутка работает.
+- **ContactForm**: табы переключаются (Подписка→Вопрос показывает 3 поля), кнопка disabled пока email невалиден, после заполнения и отправки — success-message "Подписка оформлена!".
+- **LanguageToggle**: dropdown открывается, выбор EN сохраняется в localStorage (`kb-lang=en`).
+- **Адаптив**: моб 390×844 — 0 горизонтального скролла (390=390), 16 секций стекаются корректно.
+- **VLM-оценка** (3 скриншота): Audience 8/10, Testimonials 8/10, ContactForm 8/10 — визуальный полиш подтверждён. Замечание VLM: низкий контраст плейсхолдеров/серого текста (WCAG) — в текущей палитре text-muted-foreground читаемо, но можно усилить.
+- **Lint**: 0 ошибок, 0 предупреждений.
+
+## Нерешённые вопросы / риски / рекомендации на следующий раунд
+- **Полная i18n**: LanguageToggle переключает `lang` в контексте, но тексты компонентов пока не переведены — для полной i18n нужен словарь в site-data и обёртка всех строк через t()-функцию. Сейчас переключатель сохраняет выбор, но контент остаётся русским. Приоритет: либо добить переводы, либо убрать toggle, чтобы не вводить в заблуждение.
+- **Статический экспорт vs API routes**: `output: "export"` несовместим с API routes. Для GitHub Pages нужно либо: (a) вынести github-stats в клиентский fetch к api.github.com (CORS поддерживается), а subscribe — на сторонний сервис (Formspree/Getform), либо (b) хостить на Vercel/Netlify с сохранением API routes. В workflow сейчас заглушка `build:pages`, требующая доработки перед реальным экспортом.
+- **Subscribe хранилище**: сейчас in-memory (теряется при рестарте). В проде — заменить на БД (Prisma уже настроен) или email-сервис (Mailchimp/Buttondown).
+- **Accessibility (по VLM)**: усилить контраст muted-foreground в формах, добавить aria-live для динамических сообщений формы, floating labels для полей.
+- **Производительность**: 16 секций тяжеловаты. Можно добавить lazy-mount (IntersectionObserver) для секций ниже fold, чтобы уменьшить initial bundle.
+- **OG-image динамический**: текущий OG статичный (один SVG). Можно генерировать персонализированный OG per-page, но для визитки текущего достаточно.
+
+Приоритет следующего раунда: добить полную i18n (переводы RU/EN) ИЛИ усилить accessibility (контраст, aria-live, floating labels). Рекомендую сначала i18n, так как переключатель уже есть и вводит в заблуждение.
