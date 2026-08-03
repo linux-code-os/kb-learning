@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLang, useT } from "@/components/site/language-toggle";
 import { pick } from "@/lib/translations";
 import { demoCoins } from "@/lib/site-data";
+import { Sparkline } from "@/components/site/sparkline";
 
 // Симулированные монеты с начальной ценой
 type Coin = {
@@ -29,6 +30,7 @@ type Coin = {
   price: number;
   prevPrice: number;
   change24h: number;
+  history: number[]; // последние N цен для sparkline
 };
 
 type Holding = {
@@ -48,6 +50,15 @@ type Order = {
 };
 
 const START_BALANCE = 10000; // виртуальные USD
+const HISTORY_LEN = 20; // сколько тиков хранить для sparkline
+const STORAGE_KEY = "kb-simulator-state-v1";
+
+type PersistedState = {
+  balance: number;
+  holdings: Holding[];
+  orders: Order[];
+  coins: { symbol: string; price: number; change24h: number; history: number[] }[];
+};
 
 function formatUsd(n: number, decimals = 2): string {
   if (!isFinite(n)) return "$0.00";
@@ -62,30 +73,94 @@ function formatCoin(n: number): string {
   return n.toFixed(8);
 }
 
+function loadState(): PersistedState | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as PersistedState;
+    // Базовая валидация
+    if (
+      typeof parsed.balance !== "number" ||
+      !Array.isArray(parsed.holdings) ||
+      !Array.isArray(parsed.orders) ||
+      !Array.isArray(parsed.coins)
+    ) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function saveState(state: PersistedState) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    /* приватный режим / квота */
+  }
+}
+
 export function TradeSimulator() {
   const { lang } = useLang();
   const t = useT();
 
-  // Инициализация монет из demoCoins
-  const [coins, setCoins] = React.useState<Coin[]>(() =>
-    demoCoins.slice(0, 6).map((c) => ({
+  // Инициализация монет: из localStorage или из demoCoins
+  const [coins, setCoins] = React.useState<Coin[]>(() => {
+    const saved = loadState();
+    if (saved && saved.coins.length >= 6) {
+      return saved.coins.slice(0, 6).map((c) => ({
+        symbol: c.symbol,
+        name: demoCoins.find((d) => d.symbol === c.symbol)?.name ?? c.symbol,
+        price: c.price,
+        prevPrice: c.price,
+        change24h: c.change24h,
+        history: c.history && c.history.length >= 2 ? c.history : [c.price],
+      }));
+    }
+    return demoCoins.slice(0, 6).map((c) => ({
       symbol: c.symbol,
       name: c.name,
       price: c.priceUsd,
       prevPrice: c.priceUsd,
       change24h: (Math.random() - 0.5) * 12,
-    })),
-  );
+      history: [c.priceUsd],
+    }));
+  });
 
-  const [balance, setBalance] = React.useState(START_BALANCE);
-  const [holdings, setHoldings] = React.useState<Holding[]>([]);
-  const [orders, setOrders] = React.useState<Order[]>([]);
+  const [balance, setBalance] = React.useState<number>(() => {
+    const saved = loadState();
+    return saved && typeof saved.balance === "number" ? saved.balance : START_BALANCE;
+  });
+  const [holdings, setHoldings] = React.useState<Holding[]>(() => {
+    const saved = loadState();
+    return saved?.holdings ?? [];
+  });
+  const [orders, setOrders] = React.useState<Order[]>(() => {
+    const saved = loadState();
+    return saved?.orders ?? [];
+  });
   const [selected, setSelected] = React.useState(0);
   const [side, setSide] = React.useState<"buy" | "sell">("buy");
   const [orderType, setOrderType] = React.useState<"market" | "limit">("market");
   const [amount, setAmount] = React.useState("");
   const [limitPrice, setLimitPrice] = React.useState("");
   const [toast, setToast] = React.useState<{ msg: string; type: "ok" | "err" } | null>(null);
+
+  // Персистентность: сохраняем состояние при изменениях
+  React.useEffect(() => {
+    saveState({
+      balance,
+      holdings,
+      orders,
+      coins: coins.map((c) => ({
+        symbol: c.symbol,
+        price: c.price,
+        change24h: c.change24h,
+        history: c.history,
+      })),
+    });
+  }, [balance, holdings, orders, coins]);
 
   const currentCoin = coins[selected];
 
@@ -140,11 +215,13 @@ export function TradeSimulator() {
           // случайное изменение ±2.5%
           const drift = (Math.random() - 0.48) * 0.025;
           const newPrice = Math.max(c.price * (1 + drift), 0.0001);
+          const newHistory = [...c.history, newPrice].slice(-HISTORY_LEN);
           return {
             ...c,
             prevPrice: c.price,
             price: newPrice,
             change24h: c.change24h + drift * 100,
+            history: newHistory,
           };
         }),
       );
@@ -245,6 +322,25 @@ export function TradeSimulator() {
     setOrders([]);
     setAmount("");
     setLimitPrice("");
+    // Сбрасываем цены к исходным и очищаем историю
+    setCoins((prev) =>
+      prev.map((c) => {
+        const orig = demoCoins.find((d) => d.symbol === c.symbol);
+        const basePrice = orig?.priceUsd ?? c.price;
+        return {
+          ...c,
+          price: basePrice,
+          prevPrice: basePrice,
+          change24h: 0,
+          history: [basePrice],
+        };
+      }),
+    );
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
     showToast(pick({ ru: "Симулятор сброшен", en: "Simulator reset" }, lang), "ok");
   };
 
@@ -507,8 +603,16 @@ export function TradeSimulator() {
                             <TrendingDown className="h-3.5 w-3.5 text-rose-500" />
                           )}
                         </div>
-                        <div className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
-                          {formatUsd(coin.price, coin.price < 1 ? 4 : 2)}
+                        <div className="mt-1 flex items-center justify-between gap-1">
+                          <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                            {formatUsd(coin.price, coin.price < 1 ? 4 : 2)}
+                          </span>
+                          <Sparkline
+                            data={coin.history}
+                            width={48}
+                            height={18}
+                            positive={coin.change24h >= 0}
+                          />
                         </div>
                         <div
                           className={`font-mono text-[10px] tabular-nums ${

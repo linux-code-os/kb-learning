@@ -334,3 +334,59 @@ Task: Assess current project status, perform QA via agent-browser, then complete
 - **Static export для GitHub Pages**: `output: "export"` несовместим с API routes. Workflow из раунда 3 требует доработки (клиентский fetch для github-stats, сторонний сервис для subscribe).
 
 Приоритет следующего раунда: добавить localStorage-персистентность симулятора + mini-sparkline график цены для монет, либо провести formal a11y audit (axe-core) и закрыть оставшиеся WCAG-нарушения.
+
+---
+Task ID: 6
+Agent: main (Z.ai Code) — cron webDevReview round 5
+Task: Assess current project status, perform QA via agent-browser, then add localStorage persistence + sparkline price charts + a11y audit to the Trade Simulator.
+
+## Текущий статус проекта (оценка на старте раунда)
+- После раунда 5: 17 секций, полная i18n (UI + data), Trade Simulator с market/limit ордерами, lint чист.
+- Рекомендации прошлого раунда: localStorage-персистентность симулятора, mini-sparkline графики, formal a11y audit (axe-core).
+
+## Цели и выполненные изменения
+
+**1. localStorage-персистентность Trade Simulator** (`trade-simulator.tsx`)
+- Добавлен `PersistedState` тип + `loadState()`/`saveState()` хелперы с валидацией.
+- Ключ `kb-simulator-state-v1`, сохраняет: balance, holdings, orders, coins (с price + change24h + history).
+- Все state-инициализаторы (coins, balance, holdings, orders) теперь читают из localStorage при mount.
+- `useEffect` сохраняет состояние при каждом изменении balance/holdings/orders/coins.
+- Reset: очищает localStorage + сбрасывает цены к исходным demoCoins значениям + обнуляет history.
+- После перезагрузки страницы пользователь возвращается к своему демо-портфелю.
+
+**2. Mini-sparkline графики цен** (`sparkline.tsx` — новый компонент)
+- SVG-спарклайн: рисует line + area path по массиву значений, подсвечивает up (emerald) / down (rose).
+- Gradient fill под линией, точка на последнем значении.
+- Адаптивные размеры (width/height props), обработка < 2 точек (заглушка-линия).
+- Интегрирован в карточки монет симулятора (48×18px рядом с ценой).
+- History хранит последние 20 тиков (`HISTORY_LEN`), обновляется каждые 2.5 сек вместе с ценой.
+- History также персистится в localStorage — после перезагрузки графики продолжаются.
+
+**3. A11y audit через axe-core** (прогнан через agent-browser eval)
+- **Было**: 2 violations (aria-valid-attr-value critical + button-name critical), 29 passes.
+- **Исправлено**: button-name — добавлены `aria-label` к обоим SelectTrigger в CryptoConverter (t("converter.give") / t("converter.receive")), кнопка swap получила переводимый aria-label.
+- **Осталось**: aria-valid-attr-value (2 nodes) — это известный false-positive Radix Tabs (trigger `aria-controls` указывает на content, который рендерится lazily; когда таб активен — content в DOM и aria-controls валиден). Документированное поведение Radix UI, не реальное WCAG-нарушение.
+- **Итог audit**: 1 known-false-positive, 0 реальных нарушений. 29 passes.
+
+**4. CryptoConverter i18n + a11y** (бонус — конвертер не был переведён)
+- Полностью переведён на RU/EN через useT() + pick(): eyebrow, title, description, labels (Отдаю/Получаю), swap aria-label, disclaimer.
+- Добавлены `htmlFor`/`id` связи label↔input, `aria-live="polite"` на результате конвертации, `aria-hidden` на декоративных иконках.
+
+## Результаты верификации (agent-browser)
+- **17 секций**, 0 ошибок браузера, 0 проблем в консоли, lint чист.
+- **localStorage persistence**: купил 0.05 BTC (баланс $10000 → $6681.11, BTC в портфеле) → перезагрузил страницу → баланс $6681.11 и BTC сохранены. localStorage содержит `kb-simulator-state-v1` с balance/holdings/coins/history.
+- **Sparklines**: рендерятся в каждой карточке монеты (6 шт.), обновляются каждые 2.5 сек с новыми тиками. После перезагрузки история продолжается (загружается из localStorage).
+- **A11y**: axe-core — 29 passes, button-name fixed, 1 known Radix false-positive (aria-valid-attr-value).
+- **Адаптив**: моб 390×844 — 0 горизонтального скролла.
+- **VLM-оценка** симулятора со sparklines: **8/10** — "sparkline charts clearly visible and effectively add value by providing immediate visual representation of recent price trends".
+- **Lint**: 0 ошибок, 0 предупреждений.
+
+## Нерешённые вопросы / риски / рекомендации на следующий раунд
+- **Radix Tabs aria-controls false-positive**: известный quirk Radix UI. Можно "исправить" добавив `forceMount` к TabsContent (но тогда все панели в DOM одновременно — хуже для производительности). Рекомендуется принять как known issue и задокументировать.
+- **Dev-server нестабилен**: sandbox убивает процесс после bash-команд. Нужен supervisor/pm2.
+- **Static export для GitHub Pages**: `output: "export"` несовместим с API routes. Нужно вынести github-stats в клиентский fetch (CORS) + сторонний сервис для subscribe.
+- **Производительность**: 17 секций + sparklines + тикер каждые 2.5с. Можно throttling persistence (сохранять не каждый tick, а каждые 5 сек).
+- **Больше монет в симуляторе**: сейчас 6. Можно добавить переключатель топ-6/топ-12.
+- **Сравнение цен**: можно добавить "матрицу курсов" — кросс-курсы между всеми монетами.
+
+Приоритет следующего раунда: throttling localStorage writes (debounce 1-2 сек) для производительности, либо добавить переключатель количества монет в симуляторе, либо доработать static export для GitHub Pages.

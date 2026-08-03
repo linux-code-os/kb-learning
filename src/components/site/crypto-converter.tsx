@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { demoCoins } from "@/lib/site-data";
+import { useT, useLang } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
 
 function formatAmount(n: number): string {
   if (!isFinite(n)) return "0";
@@ -31,6 +33,8 @@ function formatAmount(n: number): string {
 }
 
 export function CryptoConverter() {
+  const t = useT();
+  const { lang } = useLang();
   const [fromSymbol, setFromSymbol] = React.useState("BTC");
   const [toSymbol, setToSymbol] = React.useState("USDT");
   const [amount, setAmount] = React.useState("1");
@@ -52,14 +56,14 @@ export function CryptoConverter() {
       <div className="pointer-events-none absolute inset-0 -z-10 bg-dots opacity-30 mask-fade-b" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Демо-инструмент"
+          eyebrow={t("converter.eyebrow")}
           title={
             <>
-              Конвертер криптовалют{" "}
-              <span className="text-gradient-brand">как в KB Wallet</span>
+              {t("converter.title1")}{" "}
+              <span className="text-gradient-brand">{t("converter.titleAccent")}</span>
             </>
           }
-          description="Попробуйте механику прямо в браузере. Цены симулированные — те же, что использует торговый симулятор приложения. Не финансовая рекомендация."
+          description={t("converter.desc")}
         />
 
         <motion.div
@@ -75,9 +79,9 @@ export function CryptoConverter() {
                 <Calculator className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold">Калькулятор</h3>
+                <h3 className="text-base font-bold">{pick({ ru: "Калькулятор", en: "Calculator" }, lang)}</h3>
                 <p className="text-xs text-muted-foreground">
-                  Симулированные курсы · обновляются вручную
+                  {t("converter.rate")}
                 </p>
               </div>
             </div>
@@ -85,10 +89,11 @@ export function CryptoConverter() {
             <div className="grid items-end gap-4 sm:grid-cols-[1fr_auto_1fr]">
               {/* From */}
               <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Отдаю
+                <label htmlFor="cc-amount" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  {t("converter.give")}
                 </label>
                 <Input
+                  id="cc-amount"
                   type="text"
                   inputMode="decimal"
                   value={amount}
@@ -97,10 +102,10 @@ export function CryptoConverter() {
                   }
                   className="font-mono text-lg tabular-nums"
                   placeholder="0.00"
-                  aria-label="Количество"
+                  aria-label={t("converter.give")}
                 />
                 <Select value={fromSymbol} onValueChange={setFromSymbol}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full" aria-label={t("converter.give")}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -120,7 +125,7 @@ export function CryptoConverter() {
               <div className="flex justify-center pb-1">
                 <button
                   onClick={swap}
-                  aria-label="Поменять местами"
+                  aria-label={t("converter.swap")}
                   className="group flex h-11 w-11 items-center justify-center rounded-full border border-emerald-500/40 bg-background text-emerald-500 transition hover:rotate-180 hover:bg-emerald-500 hover:text-white"
                 >
                   <ArrowLeftRight className="h-4 w-4 transition-transform" />
@@ -129,14 +134,14 @@ export function CryptoConverter() {
 
               {/* To */}
               <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Получаю
+                <label htmlFor="cc-result" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  {t("converter.receive")}
                 </label>
-                <div className="flex h-10 w-full items-center rounded-md border border-input bg-muted/40 px-3 font-mono text-lg tabular-nums">
+                <div id="cc-result" className="flex h-10 w-full items-center rounded-md border border-input bg-muted/40 px-3 font-mono text-lg tabular-nums" aria-live="polite">
                   {formatAmount(result)}
                 </div>
                 <Select value={toSymbol} onValueChange={setToSymbol}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full" aria-label={t("converter.receive")}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -170,9 +175,8 @@ export function CryptoConverter() {
             </div>
 
             <div className="mt-5 flex items-start gap-2 rounded-xl bg-amber-500/[0.07] p-3 text-xs text-muted-foreground">
-              <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-              Демо-данные для иллюстрации работы конвертера. В реальном KB
-              Wallet цены подгружаются из публичного API CoinRanking.
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" />
+              {t("converter.disclaimer")}
             </div>
           </Card>
         </motion.div>
