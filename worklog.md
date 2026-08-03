@@ -214,3 +214,123 @@ Task: Assess current project status, perform QA via agent-browser, then implemen
 - **OG-image на EN**: текущий OG статичный на русском. При EN-режиме логично отдавать EN-версию OG — можно через параметр `?lang=en` в OG route.
 
 Приоритет следующего раунда: добить переводы data-массивов (features/testimonials/FAQ/roadmap на EN) для полной i18n, либо провести formal a11y audit (axe-core) и закрыть оставшиеся WCAG-нарушения.
+
+---
+Task ID: 5-data-i18n
+Agent: data-i18n subagent
+Task: Add English (en) translations to all data arrays in site-data.ts and wire them through components using the `pick()` helper.
+
+Work Log:
+- Read worklog.md (rounds 1–4) to understand context: previous round added translations.ts dictionary + useT()/useLang() helpers, but data arrays in site-data.ts were still RU-only — language toggle was misleading. This round closes that gap.
+- Edited `/home/z/my-project/src/lib/site-data.ts`:
+  - Added `import type { LocalStr } from "@/lib/translations"` at top.
+  - `siteConfig`: converted `tagline`, `description`, `owner.bio` from string → LocalStr with natural EN translations. Kept name/handle/avatar/github URLs as plain strings.
+  - `EcosystemProject.description` → LocalStr; converted all 4 items.
+  - `Feature.title/description` → LocalStr; converted all 8 items.
+  - `libraryTopics`: added new `LibraryGroup` type with `groupId: "basics" | "trading" | "advanced"` + `group: LocalStr` + `topics: LocalStr[]`; converted all 3 groups (13 topic strings total).
+  - `BuildInstruction.label/note` → LocalStr; converted all 4 items.
+  - `Prerequisite.title/detail` → LocalStr; converted all 3 items.
+  - `Faq.question/answer` → LocalStr; converted all 8 items.
+  - `RoadmapItem.phase/title/description` → LocalStr; converted all 7 items.
+  - `Testimonial.quote/name/role` → LocalStr; converted all 6 items.
+  - `Audience.title/description` → LocalStr; converted all 4 items.
+  - Left `techStack`, `stats`, `socials`, `demoCoins`, `projectStructure`, `navLinks` as-is per spec (universal or already wired via labelKey).
+- Edited `/home/z/my-project/src/app/layout.tsx`: metadata is server-rendered statically, so changed `${siteConfig.tagline}` → `${siteConfig.tagline.ru}` (×4) and `description: siteConfig.description` → `description: siteConfig.description.ru` (×3). RU default preserved at build time.
+- Wired `pick()` + `useLang()` + `useT()` into every rendering component:
+  - `features.tsx`: pick() for title/description; t() for section heading (features.eyebrow/title1/titleAccent/desc).
+  - `testimonials.tsx`: pick() for quote/name/role (both big card and mini cards); renamed inner `t` (testimonial) → `tm` to avoid shadowing translator `t`; t() for section heading + aria-labels (testimonials.review/prev/next).
+  - `faq.tsx`: pick() for question/answer; t() for section heading + sticky intro card (faq.notFoundTitle/notFoundDesc/askQuestion).
+  - `roadmap.tsx`: refactored `statusConfig` to use `labelKey: TranslationKey` instead of `label: string`; pick() for phase/title/description; t() for status badge label + section heading + "Follow progress in" footer.
+  - `ecosystem.tsx`: pick() for description (inside ProjectCard component, which now uses its own useLang/useT); t() for "Flagship" badge, "Open" link, section heading, "All projects are open on" footer; renamed inner `t` (tag) → `tag` to avoid shadowing.
+  - `audience.tsx`: pick() for title/description; t() for section heading.
+  - `crypto-library.tsx`: refactored `groupAccent` map keys from Russian group names ("Основы"/"Трейдинг"/"Продвинутое") to stable `groupId` values ("basics"/"trading"/"advanced") with proper `Record<"basics"|"trading"|"advanced", ...>` type; uses `groupAccent[group.groupId]` for lookup; pick() for group + each topic; t() for section heading + "{n} topics" counter + offline footer.
+  - `get-started.tsx`: pick() for instruction label/note + prerequisite title/detail; t() for section heading + "Secrets & configuration" block + "What you need to install" + iOS warning + "Open README on GitHub" button + Copy/Copied in CommandBlock.
+  - `about.tsx`: converted local `points` array (4 RU strings) to `LocalStr[]` with EN translations; pick() for points + owner.bio; t() for section heading + "One code, two platforms" + "Educational project" + "Learn without risk" + "Project author" labels; added bio rendering next to owner name/handle.
+  - `footer.tsx`: added useLang + pick import; renders `pick(siteConfig.description, lang)` for the brand description.
+  - `connect.tsx`: added useT import; t() for section heading + "soon" badge + CTA banner (ctaTitle/ctaDesc/ctaButton). (No data arrays here — socials.name stays plain since they are brand names.)
+- Verified hero.tsx — it already uses `t("hero.desc")` (translation key) for hero description, NOT `siteConfig.description` directly. Only uses `siteConfig.flagshipRepo` (URL, not localized). No changes needed.
+- Ran `bun run lint` (eslint .) → **0 errors, 0 warnings**.
+- Ran `bunx tsc --noEmit` for sanity: only pre-existing errors in unrelated files (examples/websocket, skills/, api/og route Buffer typing, useCountUp ref typing in hero/github-stats — all from previous rounds). **Zero type errors in any file I edited.**
+
+Stage Summary:
+- **Files edited (13 total):** `src/lib/site-data.ts`, `src/app/layout.tsx`, and 11 components in `src/components/site/` (features, testimonials, faq, roadmap, ecosystem, audience, crypto-library, get-started, about, footer, connect).
+- **Data items translated (~54 items / ~120 LocalStr fields):**
+  - siteConfig: 3 LocalStr fields (tagline, description, owner.bio)
+  - ecosystem: 4 items × 1 field = 4
+  - features: 8 items × 2 fields = 16
+  - libraryTopics: 3 groups + 13 topics = 16 LocalStr fields (with new groupId discriminator)
+  - buildInstructions: 4 items × 2 fields = 8
+  - prerequisites: 3 items × 2 fields = 6
+  - faqs: 8 items × 2 fields = 16
+  - roadmap: 7 items × 3 fields = 21
+  - testimonials: 6 items × 3 fields = 18
+  - audiences: 4 items × 2 fields = 8
+  - about.tsx inline `points`: 4 LocalStr entries
+  - Total: ~120 LocalStr fields, each with both RU (preserved verbatim) and EN (natural/professional crypto-education phrasing).
+- **Key architectural decisions:**
+  1. Used existing `LocalStr = { ru; en }` type and `pick(str, lang)` helper from translations.ts — no new infrastructure.
+  2. For libraryTopics, introduced `groupId: "basics" | "trading" | "advanced"` as a stable discriminator so the `groupAccent` map is keyed by ID (not by localized group name) — accent lookup now language-independent.
+  3. For roadmap `statusConfig`, replaced `label: string` with `labelKey: TranslationKey` so the status badge ("Done"/"In progress"/"Planned") is translated via the existing `roadmap.done/active/planned` keys.
+  4. For server-rendered metadata in layout.tsx, hardcoded `.ru` (build-time default) since metadata can't easily switch per-client-language without per-locale routing.
+  5. Bonus: while editing each component, also wired up the section headings (eyebrow/title/desc) via the existing `useT()` translator — these keys already existed in translations.ts (added in round 4) but were not actually consumed by the components. Now switching to EN fully translates the page (section headings + data arrays + aria-labels), not just nav/hero/footer.
+- **Lint:** 0 errors, 0 warnings. TypeScript: zero new type errors in edited files.
+- **RU content preserved verbatim** — only EN translations added alongside. Existing functionality unchanged when lang=ru.
+- **Round 4's "частичная i18n data-секций" risk is now closed**: the language toggle is no longer misleading — switching RU↔EN actually translates the data layer (features, testimonials, FAQs, roadmap, ecosystem, audiences, library topics, build instructions, prerequisites, owner bio) in addition to the UI chrome.
+
+---
+Task ID: 5
+Agent: main (Z.ai Code) — cron webDevReview round 4
+Task: Assess current project status, perform QA via agent-browser, then complete full i18n (data arrays) + add interactive Trade Simulator feature.
+
+## Текущий статус проекта (оценка на старте раунда)
+- После раунда 4: 16 секций, lint чист, 0 ошибок браузера, частичная i18n (UI-каркас переведён, data-массивы — нет).
+- КЛЮЧЕВАЯ ПРОБЛЕМА: LanguageToggle переключает UI-строки, но features/testimonials/FAQ/roadmap/ecosystem/audience/library остаются на русском даже в EN-режиме — переключатель вводит в заблуждение.
+- Рекомендация прошлого раунда: добить переводы data-массивов для полной i18n.
+
+## Цели и выполненные изменения
+
+**Часть 1: Полная i18n data-массивов (делегирована subagent)**
+- Subagent `5-data-i18n` добавил `LocalStr = { ru; en }` поля ко всем data-массивам в site-data.ts:
+  - siteConfig (tagline, description, owner.bio), ecosystem (4 × description), features (8 × title+desc), libraryTopics (3 groups + 13 topics, +groupId), buildInstructions (4 × label+note), prerequisites (3 × title+detail), faqs (8 × question+answer), roadmap (7 × phase+title+description), testimonials (6 × quote+name+role), audiences (4 × title+description), about.tsx points (4 LocalStr).
+  - **Итого: ~54 data-элемента, ~120 LocalStr полей**, RU сохранён, EN — natural professional translation.
+- Subagent обновил 13 компонентов: features, testimonials, faq, roadmap, ecosystem, audience, crypto-library, get-started, about, footer, connect — все используют `useLang()` + `pick(field, lang)`.
+- Архитектурные решения: `groupAccent` в crypto-library теперь keyed by stable `groupId` (не RU-строкой); `statusConfig` в roadmap — `labelKey: TranslationKey`.
+- layout.tsx использует `.ru` для server-rendered metadata (build-time default).
+
+**Часть 2: Новая фича — интерактивный Trade Simulator** (`trade-simulator.tsx`)
+- Демо механики KB Wallet прямо в браузере: виртуальный баланс $10000, 6 монет (BTC/ETH/SOL/BNB/XRP/ADA) с живыми ценами.
+- **Тикер цен**: каждые 2.5 сек цены двигаются (±2.5% drift), P&L пересчитывается в реальном времени.
+- **Типы ордеров**: Market (мгновенный) и Limit (срабатывает при достижении цены). Лимитные ордера проверяются при каждом тике цен.
+- **Buy/Sell**: валидация (недостаточно средств / монет), расчёт средней цены покупки (avgCost), обновление портфеля.
+- **Портфель**: баланс, стоимость активов, общий P&L (с %), список холдингов с per-coin P&L, список открытых лимитных ордеров с cancel.
+- **Reset**: сброс к $10000.
+- **Toast-уведомления** с aria-live="polite" для a11y.
+- Полностью переведён (RU/EN): 30+ translation keys в translations.ts.
+- Nav-пункт "Симулятор / Simulator" добавлен.
+
+## Результаты верификации (agent-browser)
+- **17 секций** (было 16, +1: simulator), 0 ошибок браузера, 0 проблем в консоли.
+- **Полная i18n EN**: переключение на English переводит ВСЕ data-массивы:
+  - features: "Portfolio tracking" (было "Отслеживание портфеля")
+  - FAQ: "Is KB Wallet a real crypto app?"
+  - audience: "Crypto beginners"
+  - roadmap: "KMP scaffold"
+  - simulator title: "Trading simulator right in your browser"
+- **Trade Simulator интерактивность**:
+  - Купил 0.1 BTC по market: баланс $10000 → $3076.92, BTC в портфеле, toast "Order placed".
+  - P&L пересчитан в реальном времени: holdings $6705.54, P&L -$217.54 (-2.18%) при падении цены BTC.
+  - Limit-ордер: поле "LIMIT PRICE (USD)" появляется при переключении на Limit таб.
+  - Reset: баланс → $10000, портфель пуст, toast "Simulator reset".
+- **Адаптив**: моб 390×844 — 0 горизонтального скролла, симулятор стекается в 1 колонку.
+- **VLM-оценка** симулятора: **9/10** — "high-fidelity, risk-free practice environment for learning crypto mechanics".
+- **Lint**: 0 ошибок, 0 предупреждений.
+
+## Нерешённые вопросы / риски / рекомендации на следующий раунд
+- **Dev-server нестабилен**: в этом раунде приходилось перезапускать `bun run dev &` — sandbox убивает процесс после завершения bash-команд. Системе нужен надёжный auto-restart (supervisor/pm2).
+- **Сохранение состояния симулятора**: сейчас при перезагрузке страницы портфель сбрасывается. Можно добавить localStorage-персистентность (как у lang/theme), чтобы пользователь возвращался к своему демо-портфелю.
+- **График цены**: симулятор показывает текущую цену, но без визуального графика. Можно добавить mini-sparkline (как в Hero) для каждой монеты с историей за последние N тиков.
+- **Больше монет / таймфреймы**: сейчас 6 монет. Можно добавить фильтр по топ-10/топ-50 и переключение частоты тиков (1s/2.5s/5s).
+- **A11y формальный аудит**: стоит прогнать axe-core — текущие улучшения (skip-link, aria-live, focus-visible, lang-синхронизация) покрывают основное, но формальный audit не проводился.
+- **Static export для GitHub Pages**: `output: "export"` несовместим с API routes. Workflow из раунда 3 требует доработки (клиентский fetch для github-stats, сторонний сервис для subscribe).
+
+Приоритет следующего раунда: добавить localStorage-персистентность симулятора + mini-sparkline график цены для монет, либо провести formal a11y audit (axe-core) и закрыть оставшиеся WCAG-нарушения.

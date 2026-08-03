@@ -14,6 +14,8 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ecosystem, type EcosystemProject } from "@/lib/site-data";
+import { useLang, useT } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
 
 const iconMap = {
   wallet: Wallet,
@@ -23,6 +25,8 @@ const iconMap = {
 } as const;
 
 function ProjectCard({ project, index }: { project: EcosystemProject; index: number }) {
+  const { lang } = useLang();
+  const t = useT();
   const Icon = iconMap[project.icon];
   return (
     <motion.div
@@ -42,7 +46,7 @@ function ProjectCard({ project, index }: { project: EcosystemProject; index: num
         {project.flagship && (
           <span className="absolute right-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-500">
             <Star className="h-3 w-3 fill-emerald-500" />
-            Флагман
+            {t("ecosystem.flagship")}
           </span>
         )}
 
@@ -71,17 +75,17 @@ function ProjectCard({ project, index }: { project: EcosystemProject; index: num
         </div>
 
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          {project.description}
+          {pick(project.description, lang)}
         </p>
 
         <div className="mt-5 flex flex-wrap gap-1.5">
-          {project.tags.map((t) => (
+          {project.tags.map((tag) => (
             <Badge
-              key={t}
+              key={tag}
               variant="secondary"
               className="rounded-md bg-muted/70 font-mono text-[11px]"
             >
-              {t}
+              {tag}
             </Badge>
           ))}
         </div>
@@ -100,7 +104,7 @@ function ProjectCard({ project, index }: { project: EcosystemProject; index: num
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition group-hover:text-emerald-500"
           >
-            Открыть
+            {t("action.openRepo")}
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>
@@ -110,19 +114,20 @@ function ProjectCard({ project, index }: { project: EcosystemProject; index: num
 }
 
 export function Ecosystem() {
+  const t = useT();
   return (
     <section id="ecosystem" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-dots opacity-40 mask-fade-b" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Экосистема"
+          eyebrow={t("ecosystem.eyebrow")}
           title={
             <>
-              Четыре проекта,{" "}
-              <span className="text-gradient-brand">один автор</span>
+              {t("ecosystem.title1")}{" "}
+              <span className="text-gradient-brand">{t("ecosystem.titleAccent")}</span>
             </>
           }
-          description="KB Learning объединяет несколько репозиториев. Главный — KB Wallet, флагман экосистемы. Вокруг — вспомогательные проекты: автоматизация, командная разработка и геодезические расчёты."
+          description={t("ecosystem.desc")}
         />
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -139,7 +144,7 @@ export function Ecosystem() {
           className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground"
         >
           <GitFork className="h-4 w-4" />
-          Все проекты открыты на{" "}
+          {t("ecosystem.allOpen")}{" "}
           <a
             href="https://github.com/linux-code-dev"
             target="_blank"

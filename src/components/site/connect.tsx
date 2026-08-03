@@ -7,8 +7,10 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { socials, siteConfig } from "@/lib/site-data";
 import { socialIconMap } from "@/components/site/social-icons";
+import { useT } from "@/components/site/language-toggle";
 
 export function Connect() {
+  const t = useT();
   return (
     <section id="connect" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -17,14 +19,14 @@ export function Connect() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Контакты"
+          eyebrow={t("connect.eyebrow")}
           title={
             <>
-              Будем на связи{" "}
-              <span className="text-gradient-brand">в экосистеме</span>
+              {t("connect.title1")}{" "}
+              <span className="text-gradient-brand">{t("connect.titleAccent")}</span>
             </>
           }
-          description="GitHub — наш основной дом. Соцсети подключаются по мере запуска: следите за репозиторием, чтобы не пропустить."
+          description={t("connect.desc")}
         />
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -56,7 +58,7 @@ export function Connect() {
                         variant="secondary"
                         className="rounded-full bg-muted/70 text-[10px] uppercase tracking-wider"
                       >
-                        скоро
+                        {t("connect.soon")}
                       </Badge>
                     )}
                   </div>
@@ -113,12 +115,10 @@ export function Connect() {
                 Open-source
               </div>
               <h3 className="text-xl font-bold sm:text-2xl">
-                Хотите контрибьютить или задать вопрос?
+                {t("connect.ctaTitle")}
               </h3>
               <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-                Проект открыт. Fork, issue, pull request — любая помощь
-                приветствуется. Особенно — по iOS-обвязке и новым темам для
-                крипто-библиотеки.
+                {t("connect.ctaDesc")}
               </p>
             </div>
             <a
@@ -127,7 +127,7 @@ export function Connect() {
               rel="noopener noreferrer"
               className="inline-flex shrink-0 items-center gap-2 rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-500"
             >
-              Перейти на GitHub
+              {t("connect.ctaButton")}
               <ArrowUpRight className="h-4 w-4" />
             </a>
           </div>

@@ -10,6 +10,7 @@ import { TechStack } from "@/components/site/tech-stack";
 import { Architecture } from "@/components/site/architecture";
 import { CryptoLibrary } from "@/components/site/crypto-library";
 import { CryptoConverter } from "@/components/site/crypto-converter";
+import { TradeSimulator } from "@/components/site/trade-simulator";
 import { Testimonials } from "@/components/site/testimonials";
 import { Roadmap } from "@/components/site/roadmap";
 import { Faq } from "@/components/site/faq";
@@ -39,6 +40,7 @@ export default function Home() {
         <Architecture />
         <CryptoLibrary />
         <CryptoConverter />
+        <TradeSimulator />
         <Testimonials />
         <Roadmap />
         <Faq />

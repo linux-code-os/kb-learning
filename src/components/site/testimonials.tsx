@@ -7,8 +7,12 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { testimonials } from "@/lib/site-data";
+import { useLang, useT } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
 
 export function Testimonials() {
+  const { lang } = useLang();
+  const t = useT();
   const [active, setActive] = React.useState(0);
   const [direction, setDirection] = React.useState(0);
   const [autoplay, setAutoplay] = React.useState(true);
@@ -36,14 +40,14 @@ export function Testimonials() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Отзывы"
+          eyebrow={t("testimonials.eyebrow")}
           title={
             <>
-              Что говорят{" "}
-              <span className="text-gradient-brand">пользователи</span>
+              {t("testimonials.title1")}{" "}
+              <span className="text-gradient-brand">{t("testimonials.titleAccent")}</span>
             </>
           }
-          description="Демо-отзывы от студентов, разработчиков и практиков, которые разбирались в крипте через KB Wallet. Честно — проект учебный, но подход рабочий."
+          description={t("testimonials.desc")}
         />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-5">
@@ -83,7 +87,7 @@ export function Testimonials() {
                     transition={{ duration: 0.35, ease: "easeOut" }}
                     className="mt-5 text-lg font-medium leading-relaxed text-foreground/90 sm:text-xl"
                   >
-                    «{current.quote}»
+                    «{pick(current.quote, lang)}»
                   </motion.blockquote>
                 </AnimatePresence>
 
@@ -95,9 +99,9 @@ export function Testimonials() {
                     {current.initials}
                   </div>
                   <div>
-                    <div className="text-sm font-bold">{current.name}</div>
+                    <div className="text-sm font-bold">{pick(current.name, lang)}</div>
                     <div className="text-xs text-muted-foreground">
-                      {current.role}
+                      {pick(current.role, lang)}
                     </div>
                   </div>
                 </div>
@@ -112,7 +116,7 @@ export function Testimonials() {
                           setDirection(i > active ? 1 : -1);
                           setActive(i);
                         }}
-                        aria-label={`Отзыв ${i + 1}`}
+                        aria-label={`${t("testimonials.review")} ${i + 1}`}
                         className={`h-1.5 rounded-full transition-all ${
                           i === active
                             ? "w-6 bg-emerald-500"
@@ -127,7 +131,7 @@ export function Testimonials() {
                       size="icon"
                       className="h-9 w-9 rounded-full"
                       onClick={() => go(-1)}
-                      aria-label="Предыдущий отзыв"
+                      aria-label={t("testimonials.prev")}
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
@@ -136,7 +140,7 @@ export function Testimonials() {
                       size="icon"
                       className="h-9 w-9 rounded-full"
                       onClick={() => go(1)}
-                      aria-label="Следующий отзыв"
+                      aria-label={t("testimonials.next")}
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>
@@ -148,9 +152,9 @@ export function Testimonials() {
 
           {/* Сетка мини-отзывов */}
           <div className="grid gap-4 lg:col-span-2">
-            {testimonials.slice(0, 3).map((t, i) => (
+            {testimonials.slice(0, 3).map((tm, i) => (
               <motion.button
-                key={t.name}
+                key={pick(tm.name, lang)}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -169,14 +173,14 @@ export function Testimonials() {
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5">
                     <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${t.avatarColor} text-[10px] font-bold text-white`}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${tm.avatarColor} text-[10px] font-bold text-white`}
                     >
-                      {t.initials}
+                      {tm.initials}
                     </div>
                     <div className="leading-tight">
-                      <div className="text-xs font-bold">{t.name}</div>
+                      <div className="text-xs font-bold">{pick(tm.name, lang)}</div>
                       <div className="text-[11px] text-muted-foreground">
-                        {t.role}
+                        {pick(tm.role, lang)}
                       </div>
                     </div>
                   </div>
@@ -185,7 +189,7 @@ export function Testimonials() {
                       <Star
                         key={si}
                         className={`h-3 w-3 ${
-                          si < t.rating
+                          si < tm.rating
                             ? "fill-amber-400 text-amber-400"
                             : "fill-muted text-muted"
                         }`}
@@ -194,7 +198,7 @@ export function Testimonials() {
                   </div>
                 </div>
                 <p className="mt-2.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                  {t.quote}
+                  {pick(tm.quote, lang)}
                 </p>
               </motion.button>
             ))}

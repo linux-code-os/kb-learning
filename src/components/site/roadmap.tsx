@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Circle, Loader2, Rocket } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
 import { roadmap, type RoadmapItem } from "@/lib/site-data";
+import { useLang, useT } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
+import type { TranslationKey } from "@/lib/translations";
 
 const statusConfig: Record<
   RoadmapItem["status"],
   {
-    label: string;
+    labelKey: TranslationKey;
     icon: typeof CheckCircle2;
     ring: string;
     dot: string;
@@ -17,7 +20,7 @@ const statusConfig: Record<
   }
 > = {
   done: {
-    label: "Готово",
+    labelKey: "roadmap.done",
     icon: CheckCircle2,
     ring: "border-emerald-500/40",
     dot: "bg-emerald-500",
@@ -25,7 +28,7 @@ const statusConfig: Record<
     line: "bg-emerald-500/30",
   },
   active: {
-    label: "В работе",
+    labelKey: "roadmap.active",
     icon: Loader2,
     ring: "border-amber-500/40",
     dot: "bg-amber-500",
@@ -33,7 +36,7 @@ const statusConfig: Record<
     line: "bg-amber-500/30",
   },
   planned: {
-    label: "В планах",
+    labelKey: "roadmap.planned",
     icon: Circle,
     ring: "border-border",
     dot: "bg-muted-foreground/50",
@@ -43,18 +46,20 @@ const statusConfig: Record<
 };
 
 export function Roadmap() {
+  const { lang } = useLang();
+  const t = useT();
   return (
     <section id="roadmap" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Roadmap"
+          eyebrow={t("roadmap.eyebrow")}
           title={
             <>
-              Куда движется{" "}
-              <span className="text-gradient-brand">экосистема</span>
+              {t("roadmap.title1")}{" "}
+              <span className="text-gradient-brand">{t("roadmap.titleAccent")}</span>
             </>
           }
-          description="Развитие KB Wallet по вехам. Зелёное — сделано, янтарное — в активной разработке, серое — в планах. Roadmap обновляется по мере релизов."
+          description={t("roadmap.desc")}
         />
 
         <div className="mt-14">
@@ -73,7 +78,7 @@ export function Roadmap() {
                 const isLeft = i % 2 === 0;
                 return (
                   <motion.li
-                    key={item.phase}
+                    key={pick(item.phase, lang)}
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-60px" }}
@@ -103,7 +108,7 @@ export function Roadmap() {
                       >
                         <div className="flex items-center justify-between gap-3">
                           <span className="font-mono text-sm font-bold text-muted-foreground">
-                            {item.phase}
+                            {pick(item.phase, lang)}
                           </span>
                           <span
                             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${cfg.badge}`}
@@ -111,14 +116,14 @@ export function Roadmap() {
                             <span
                               className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`}
                             />
-                            {cfg.label}
+                            {t(cfg.labelKey)}
                           </span>
                         </div>
                         <h3 className="mt-2 text-base font-bold leading-snug">
-                          {item.title}
+                          {pick(item.title, lang)}
                         </h3>
                         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                          {item.description}
+                          {pick(item.description, lang)}
                         </p>
                       </div>
                     </div>
@@ -139,14 +144,14 @@ export function Roadmap() {
             className="mt-10 flex items-center justify-center gap-2 text-sm text-muted-foreground"
           >
             <Rocket className="h-4 w-4 text-emerald-500" />
-            Следите за прогрессом в{" "}
+            {t("roadmap.followProgress")}{" "}
             <a
               href="https://github.com/linux-code-dev/KB_Learning/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-emerald-500 hover:underline"
             >
-              issues на GitHub
+              issues on GitHub
             </a>
           </motion.div>
         </div>

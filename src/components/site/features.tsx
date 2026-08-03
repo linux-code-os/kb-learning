@@ -15,6 +15,8 @@ import {
 import { SectionHeading } from "@/components/site/section-heading";
 import { Card } from "@/components/ui/card";
 import { features, type Feature } from "@/lib/site-data";
+import { useLang, useT } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
 
 const iconMap: Record<Feature["icon"], LucideIcon> = {
   wallet: Wallet,
@@ -37,18 +39,20 @@ const accentMap: Record<Feature["accent"], string> = {
 };
 
 export function Features() {
+  const { lang } = useLang();
+  const t = useT();
   return (
     <section id="features" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Возможности"
+          eyebrow={t("features.eyebrow")}
           title={
             <>
-              Всё для изучения крипты{" "}
-              <span className="text-gradient-brand">в одном месте</span>
+              {t("features.title1")}{" "}
+              <span className="text-gradient-brand">{t("features.titleAccent")}</span>
             </>
           }
-          description="KB Wallet собран как маленькая, но полноценная крипто-среда: портфель, торговля, графики, аналитика и встроенная библиотека знаний."
+          description={t("features.desc")}
         />
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -56,7 +60,7 @@ export function Features() {
             const Icon = iconMap[feature.icon];
             return (
               <motion.div
-                key={feature.title}
+                key={pick(feature.title, lang)}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -69,10 +73,10 @@ export function Features() {
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="text-base font-bold leading-snug">
-                    {feature.title}
+                    {pick(feature.title, lang)}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {feature.description}
+                    {pick(feature.description, lang)}
                   </p>
                   <span className="pointer-events-none absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-emerald-500 to-amber-500 transition-all duration-500 group-hover:w-full" />
                 </Card>

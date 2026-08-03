@@ -18,6 +18,7 @@ export const translations = {
   "nav.features": { ru: "Возможности", en: "Features" },
   "nav.tech": { ru: "Технологии", en: "Tech" },
   "nav.library": { ru: "Библиотека", en: "Library" },
+  "nav.simulator": { ru: "Симулятор", en: "Simulator" },
   "nav.roadmap": { ru: "Roadmap", en: "Roadmap" },
   "nav.faq": { ru: "FAQ", en: "FAQ" },
   "nav.start": { ru: "Запуск", en: "Get started" },
@@ -290,6 +291,61 @@ export const translations = {
   "footer.socials": { ru: "Соцсети", en: "Socials" },
   "footer.madeWith": { ru: "Сделано с", en: "Made with" },
   "footer.andKotlin": { ru: "и Kotlin. Хостится на GitHub.", en: "and Kotlin. Hosted on GitHub." },
+
+  // ===== Trade Simulator (new) =====
+  "sim.eyebrow": { ru: "Живое демо", en: "Live demo" },
+  "sim.title1": { ru: "Торговый симулятор", en: "Trading simulator" },
+  "sim.titleAccent": { ru: "прямо в браузере", en: "right in your browser" },
+  "sim.desc": {
+    ru: "Попробуйте механику KB Wallet: купите и продайте виртуальные монеты на симулированном балансе. Цены двигаются, P&L пересчитывается в реальном времени. Никаких реальных денег — только тренировка.",
+    en: "Try the KB Wallet mechanics: buy and sell virtual coins on a simulated balance. Prices move, P&L recalculates in real time. No real money — just practice.",
+  },
+  "sim.balance": { ru: "Баланс (симуляция)", en: "Balance (simulated)" },
+  "sim.holdingsValue": { ru: "Стоимость активов", en: "Holdings value" },
+  "sim.totalPnl": { ru: "Общий P&L", en: "Total P&L" },
+  "sim.reset": { ru: "Сбросить", en: "Reset" },
+  "sim.market": { ru: "Рынок", en: "Market" },
+  "sim.price": { ru: "Цена", en: "Price" },
+  "sim.24h": { ru: "24ч", en: "24h" },
+  "sim.holding": { ru: "В портфеле", en: "Holding" },
+  "sim.value": { ru: "Стоимость", en: "Value" },
+  "sim.pnl": { ru: "P&L", en: "P&L" },
+  "sim.buy": { ru: "Купить", en: "Buy" },
+  "sim.sell": { ru: "Продать", en: "Sell" },
+  "sim.amount": { ru: "Количество", en: "Amount" },
+  "sim.order.market": { ru: "Рыночный", en: "Market" },
+  "sim.order.limit": { ru: "Лимитный", en: "Limit" },
+  "sim.limitPrice": { ru: "Цена лимита", en: "Limit price" },
+  "sim.placeOrder": { ru: "Разместить ордер", en: "Place order" },
+  "sim.orderPlaced": { ru: "Ордер размещён", en: "Order placed" },
+  "sim.insufficientFunds": { ru: "Недостаточно средств", en: "Insufficient funds" },
+  "sim.insufficientCoins": { ru: "Недостаточно монет", en: "Insufficient coins" },
+  "sim.emptyPortfolio": { ru: "Портфель пуст — купите монеты, чтобы начать", en: "Portfolio is empty — buy coins to start" },
+  "sim.disclaimer": {
+    ru: "Демо-симулятор. Цены генерируются случайно для иллюстрации. Никаких реальных средств. Как в KB Wallet.",
+    en: "Demo simulator. Prices are randomly generated for illustration. No real funds. Just like in KB Wallet.",
+  },
+  "sim.priceUp": { ru: "Цена выросла", en: "Price up" },
+  "sim.priceDown": { ru: "Цена упала", en: "Price down" },
+  "sim.orders": { ru: "Открытые ордера", en: "Open orders" },
+  "sim.noOrders": { ru: "Нет открытых ордеров", en: "No open orders" },
+  "sim.cancel": { ru: "Отменить", en: "Cancel" },
+  "sim.orderFilled": { ru: "Ордер исполнен", en: "Order filled" },
+  "sim.orderCancelled": { ru: "Ордер отменён", en: "Order cancelled" },
 } as const;
 
 export type Lang = "ru" | "en";
+
+/**
+ * Локализованная строка для data-массивов.
+ * Использование: { ru: "Русский текст", en: "English text" }
+ */
+export type LocalStr = { ru: string; en: string };
+
+/**
+ * Хелпер для выбора строки по языку из LocalStr.
+ */
+export function pick(str: LocalStr, lang: Lang): string {
+  return str[lang] ?? str.ru;
+}
+

@@ -10,27 +10,43 @@ import {
 import { SectionHeading } from "@/components/site/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/lib/site-data";
+import { useLang, useT } from "@/components/site/language-toggle";
+import { pick, type LocalStr } from "@/lib/translations";
 
-const points = [
-  "Отслеживание холдингов и P&L в реальном времени",
-  "Тренировка сделок на симулированном балансе",
-  "Движок рынка исполняет лимитные и стоп-ордера",
-  "17-темный справочник по крипте внутри приложения",
+const points: LocalStr[] = [
+  {
+    ru: "Отслеживание холдингов и P&L в реальном времени",
+    en: "Real-time tracking of holdings and P&L",
+  },
+  {
+    ru: "Тренировка сделок на симулированном балансе",
+    en: "Practice trades on a simulated balance",
+  },
+  {
+    ru: "Движок рынка исполняет лимитные и стоп-ордера",
+    en: "A market engine executes limit and stop orders",
+  },
+  {
+    ru: "17-темный справочник по крипте внутри приложения",
+    en: "A 17-topic crypto reference built into the app",
+  },
 ];
 
 export function About() {
+  const { lang } = useLang();
+  const t = useT();
   return (
     <section id="about" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="О проекте"
+          eyebrow={t("about.eyebrow")}
           title={
             <>
-              KB Wallet — крипто-портфель,
-              <br className="hidden sm:block" /> который учит
+              {t("about.title1")}
+              <br className="hidden sm:block" /> {t("about.title2")}
             </>
           }
-          description="Compose Multiplatform приложение для Android и iOS из одной кодовой базы Kotlin. Отслеживайте портфель, практикуйте сделки в безопасном симуляторе и изучайте основы криптовалют — от устройства блокчейна до чтения свечных графиков."
+          description={t("about.desc")}
         />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-5">
@@ -49,23 +65,20 @@ export function About() {
                   <Wallet className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-bold sm:text-2xl">
-                  Один код — две платформы
+                  {t("about.oneCodeTitle")}
                 </h3>
                 <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Kotlin Multiplatform делит бизнес-логику между Android и iOS,
-                  а Compose Multiplatform отрисовывает один и тот же UI. Это
-                  значит — меньше дублирования, быстрее фичи, консистентный
-                  опыт на обоих платформах.
+                  {t("about.oneCodeDesc")}
                 </p>
 
                 <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                   {points.map((p) => (
                     <li
-                      key={p}
+                      key={pick(p, lang)}
                       className="flex items-start gap-2.5 text-sm text-foreground/90"
                     >
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
-                      <span>{p}</span>
+                      <span>{pick(p, lang)}</span>
                     </li>
                   ))}
                 </ul>
@@ -107,12 +120,10 @@ export function About() {
                 <ShieldAlert className="h-5 w-5" />
               </div>
               <h3 className="text-base font-bold">
-                Образовательный проект
+                {t("about.eduTitle")}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                KB Wallet — учебное/демо-приложение. Ничто здесь не является
-                финансовой рекомендацией. Торговый симулятор использует
-                вымышленные балансы — никаких реальных денег и реальных бирж.
+                {t("about.eduDesc")}
               </p>
             </div>
 
@@ -120,14 +131,12 @@ export function About() {
               <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-500">
                 <GraduationCap className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold">Учитесь без риска</h3>
+              <h3 className="text-base font-bold">{t("about.learnTitle")}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Сначала разберитесь, как работают кошельки, ключи и биржи —
-                потом тренируйте ордера. Ошибки здесь стоят ноль, а навык
-                остаётся.
+                {t("about.learnDesc")}
               </p>
               <div className="mt-5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Автор проекта
+                {t("about.author")}
               </div>
               <div className="mt-2 flex items-center gap-3">
                 {/* Аватар с GitHub — внешний хостинг, Next/Image не нужен */}
@@ -142,6 +151,9 @@ export function About() {
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {siteConfig.owner.handle}
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    {pick(siteConfig.owner.bio, lang)}
                   </div>
                 </div>
               </div>

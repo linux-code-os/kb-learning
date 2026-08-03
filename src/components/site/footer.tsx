@@ -4,13 +4,14 @@ import Link from "next/link";
 import { ArrowUp, Heart } from "lucide-react";
 import { BrandLogo } from "@/components/site/brand-logo";
 import { GithubIcon } from "@/components/site/social-icons";
-import { useT } from "@/components/site/language-toggle";
+import { useT, useLang } from "@/components/site/language-toggle";
 import { navLinks, siteConfig, socials } from "@/lib/site-data";
-import type { TranslationKey } from "@/lib/translations";
+import { pick, type TranslationKey } from "@/lib/translations";
 
 export function Footer() {
   const year = new Date().getFullYear();
   const t = useT();
+  const { lang } = useLang();
 
   return (
     <footer className="relative mt-auto border-t border-border/60 bg-card/40">
@@ -21,7 +22,7 @@ export function Footer() {
           <div className="lg:col-span-5">
             <BrandLogo />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              {siteConfig.description}
+              {pick(siteConfig.description, lang)}
             </p>
             <a
               href={siteConfig.github}

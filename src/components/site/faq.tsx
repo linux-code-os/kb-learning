@@ -13,8 +13,12 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { faqs, siteConfig } from "@/lib/site-data";
+import { useLang, useT } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
 
 export function Faq() {
+  const { lang } = useLang();
+  const t = useT();
   return (
     <section id="faq" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -23,14 +27,14 @@ export function Faq() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="FAQ"
+          eyebrow={t("faq.eyebrow")}
           title={
             <>
-              Частые вопросы{" "}
-              <span className="text-gradient-brand">без воды</span>
+              {t("faq.title1")}{" "}
+              <span className="text-gradient-brand">{t("faq.titleAccent")}</span>
             </>
           }
-          description="Собрали то, что чаще всего спрашивают о KB Wallet и экосистеме. Не нашли ответ — заведите issue на GitHub."
+          description={t("faq.desc")}
         />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-5">
@@ -47,12 +51,10 @@ export function Faq() {
                 <MessageCircleQuestion className="h-5 w-5" />
               </div>
               <h3 className="text-lg font-bold">
-                Не нашли ответ?
+                {t("faq.notFoundTitle")}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Каждый вопрос — повод улучшить документацию. Откройте issue с
-                меткой <span className="font-mono text-xs">question</span> —
-                ответим и, возможно, добавим сюда.
+                {t("faq.notFoundDesc")}
               </p>
               <Button
                 asChild
@@ -64,7 +66,7 @@ export function Faq() {
                   rel="noopener noreferrer"
                 >
                   <HelpCircle className="h-4 w-4" />
-                  Задать вопрос
+                  {t("faq.askQuestion")}
                 </a>
               </Button>
             </div>
@@ -93,11 +95,11 @@ export function Faq() {
                         <span className="mt-0.5 font-mono text-xs font-bold text-emerald-500">
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <span>{faq.question}</span>
+                        <span>{pick(faq.question, lang)}</span>
                       </span>
                     </AccordionTrigger>
                     <AccordionContent className="px-4 pb-4 pl-12 text-sm leading-relaxed text-muted-foreground">
-                      {faq.answer}
+                      {pick(faq.answer, lang)}
                     </AccordionContent>
                   </AccordionItem>
                 ))}

@@ -19,10 +19,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://linux-code-dev.github.io"),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    default: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
     template: `%s · ${siteConfig.name}`,
   },
-  description: siteConfig.description,
+  description: siteConfig.description.ru,
   keywords: [
     "KB Learning",
     "KB Wallet",
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description: siteConfig.description,
+    title: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
+    description: siteConfig.description.ru,
     url: "https://linux-code-dev.github.io",
     siteName: siteConfig.name,
     type: "website",
@@ -51,14 +51,14 @@ export const metadata: Metadata = {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: `${siteConfig.name} — ${siteConfig.tagline}`,
+        alt: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description: siteConfig.description,
+    title: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
+    description: siteConfig.description.ru,
     images: ["/api/og"],
   },
 };

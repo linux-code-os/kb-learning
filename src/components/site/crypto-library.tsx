@@ -4,27 +4,33 @@ import { motion } from "framer-motion";
 import { BookOpen, CheckCircle2 } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
 import { libraryTopics } from "@/lib/site-data";
+import { useLang, useT } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
 
-const groupAccent: Record<string, { ring: string; dot: string; chip: string }> =
-  {
-    Основы: {
-      ring: "border-emerald-500/30",
-      dot: "bg-emerald-500",
-      chip: "bg-emerald-500/10 text-emerald-500",
-    },
-    Трейдинг: {
-      ring: "border-amber-500/30",
-      dot: "bg-amber-500",
-      chip: "bg-amber-500/10 text-amber-500",
-    },
-    Продвинутое: {
-      ring: "border-rose-500/30",
-      dot: "bg-rose-500",
-      chip: "bg-rose-500/10 text-rose-500",
-    },
-  };
+const groupAccent: Record<
+  "basics" | "trading" | "advanced",
+  { ring: string; dot: string; chip: string }
+> = {
+  basics: {
+    ring: "border-emerald-500/30",
+    dot: "bg-emerald-500",
+    chip: "bg-emerald-500/10 text-emerald-500",
+  },
+  trading: {
+    ring: "border-amber-500/30",
+    dot: "bg-amber-500",
+    chip: "bg-amber-500/10 text-amber-500",
+  },
+  advanced: {
+    ring: "border-rose-500/30",
+    dot: "bg-rose-500",
+    chip: "bg-rose-500/10 text-rose-500",
+  },
+};
 
 export function CryptoLibrary() {
+  const { lang } = useLang();
+  const t = useT();
   const total = libraryTopics.reduce((acc, g) => acc + g.topics.length, 0);
 
   return (
@@ -32,23 +38,23 @@ export function CryptoLibrary() {
       <div className="pointer-events-none absolute inset-0 -z-10 bg-dots opacity-30 mask-fade-b" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Крипто-библиотека"
+          eyebrow={t("library.eyebrow")}
           title={
             <>
-              {total} тем — от{" "}
-              <span className="text-gradient-brand">«что такое блокчейн»</span>{" "}
-              до налогов
+              {total} {t("library.title1")}{" "}
+              <span className="text-gradient-brand">{t("library.titleAccent")}</span>{" "}
+              {t("library.title3")}
             </>
           }
-          description="Справочник встроен прямо в приложение. Не нужно гуглить по крупицам — основы собраны в одном месте и структурированы по уровню."
+          description={t("library.desc")}
         />
 
         <div className="mt-14 grid gap-5 md:grid-cols-3">
           {libraryTopics.map((group, i) => {
-            const accent = groupAccent[group.group];
+            const accent = groupAccent[group.groupId];
             return (
               <motion.div
-                key={group.group}
+                key={group.groupId}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -60,23 +66,23 @@ export function CryptoLibrary() {
                     className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${accent.chip}`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${accent.dot}`} />
-                    {group.group}
+                    {pick(group.group, lang)}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {group.topics.length} тем
+                    {group.topics.length} {t("library.topics")}
                   </span>
                 </div>
 
                 <ul className="mt-5 space-y-2.5">
                   {group.topics.map((topic) => (
                     <li
-                      key={topic}
+                      key={pick(topic, lang)}
                       className="flex items-start gap-2.5 text-sm"
                     >
                       <CheckCircle2
                         className={`mt-0.5 h-4 w-4 shrink-0 ${accent.chip.split(" ")[1]}`}
                       />
-                      <span className="text-foreground/90">{topic}</span>
+                      <span className="text-foreground/90">{pick(topic, lang)}</span>
                     </li>
                   ))}
                 </ul>
@@ -93,7 +99,7 @@ export function CryptoLibrary() {
           className="mt-8 flex items-center justify-center gap-3 text-sm text-muted-foreground"
         >
           <BookOpen className="h-4 w-4 text-emerald-500" />
-          Библиотека доступна офлайн внутри KB Wallet
+          {t("library.offline")}
         </motion.div>
       </div>
     </section>
