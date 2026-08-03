@@ -333,6 +333,10 @@ export const translations = {
   "sim.cancel": { ru: "Отменить", en: "Cancel" },
   "sim.orderFilled": { ru: "Ордер исполнен", en: "Order filled" },
   "sim.orderCancelled": { ru: "Ордер отменён", en: "Order cancelled" },
+  "sim.tradeHistory": { ru: "Журнал сделок", en: "Trade history" },
+  "sim.clearHistory": { ru: "Очистить", en: "Clear" },
+  "sim.noTrades": { ru: "Сделок пока нет — исполните ордер", en: "No trades yet — execute an order" },
+  "sim.realizedPnl": { ru: "Реализованная P&L", en: "Realized P&L" },
 } as const;
 
 export type Lang = "ru" | "en";

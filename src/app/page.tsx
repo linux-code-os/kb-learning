@@ -11,6 +11,7 @@ import { Architecture } from "@/components/site/architecture";
 import { CryptoLibrary } from "@/components/site/crypto-library";
 import { CryptoConverter } from "@/components/site/crypto-converter";
 import { TradeSimulator } from "@/components/site/trade-simulator";
+import { CrossRates } from "@/components/site/cross-rates";
 import { Testimonials } from "@/components/site/testimonials";
 import { Roadmap } from "@/components/site/roadmap";
 import { Faq } from "@/components/site/faq";
@@ -45,6 +46,7 @@ export default function Home() {
         <SectionDivider className="my-4" />
         <CryptoConverter />
         <TradeSimulator />
+        <CrossRates />
         <SectionDivider className="my-4" />
         <Testimonials />
         <Roadmap />

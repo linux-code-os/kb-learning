@@ -445,3 +445,57 @@ Task: Assess current project status, perform QA via agent-browser, then add debo
 - **More a11y**: axe-core показал 1 known Radix false-positive. Можно добавить `axe-core` в CI для регрессии.
 
 Приоритет следующего раунда: trade history log (журнал сделок) + Lighthouse performance audit, либо доработать static export для GitHub Pages (клиентский fetch github-stats).
+
+---
+Task ID: 8
+Agent: main (Z.ai Code) — cron webDevReview round 7
+Task: Assess current project status, perform QA via agent-browser, then add trade history log + cross-rates matrix.
+
+## Текущий статус проекта (оценка на старте раунда)
+- После раунда 7: 17 секций, Trade Simulator с persistence + sparklines + coin count toggle + debounce, lint чист.
+- Рекомендации прошлого раунда: trade history log, Lighthouse audit, static export.
+
+## Цели и выполненные изменения
+
+**1. Trade history log (журнал сделок)** — `trade-simulator.tsx`
+- Новый тип `TradeRecord`: id, symbol, side, type, amount, price, total, balanceAfter, realizedPnl?, executedAt.
+- Новый state `trades: TradeRecord[]`, инициализируется из localStorage, персистится (с debounce 1.5с).
+- `TRADE_HISTORY_LEN = 50` — лимит записей (FIFO, новые сверху).
+- `executeOrder()` теперь создаёт TradeRecord и добавляет в журнал:
+  - Для sell — считает `realizedPnl = (price - avgCost) * amount` (реализованная прибыль/убыток относительно средней цены покупки).
+  - Для buy — realizedPnl не считается (нет реализации).
+- UI: секция "Журнал сделок (N)" с кнопкой "Очистить", scrollable list (`max-h-64 overflow-y-auto`), каждая запись — Badge (buy/sell цвет), symbol, amount @ price, realizedPnl (для sell, цвет emerald/rose), timestamp (locale-aware ru/en).
+- Reset очищает trades.
+- 4 новых translation keys: sim.tradeHistory, sim.clearHistory, sim.noTrades, sim.realizedPnl.
+- Полностью переведено RU/EN.
+
+**2. Cross-rates matrix (матрица кросс-курсов)** — новый компонент `cross-rates.tsx`
+- Отдельная секция `#rates` после симулятора.
+- Таблица 6×6: BTC/ETH/SOL/BNB/XRP/ADA, показывает "1 ед. row = ? ед. column".
+- Sticky первая колонка + заголовок (горизонтальный скролл на мобиле).
+- Диагональ (same coin) = "—".
+- Форматирование: ≥100 → 0 знаков, ≥1 → 4 знака, ≥0.01 → 6 знаков, иначе exponential.
+- Локализованные заголовки и описание через `pick()` + useLang().
+- Пример: 1 BTC = 19.16 ETH, 1 ETH = 0.0522 BTC (взаимообратные).
+
+## Результаты верификации (agent-browser)
+- **18 секций** (было 17, +1: rates), 0 ошибок браузера, 0 проблем в консоли, lint чист.
+- **Trade history**: 
+  - Initial: "Сделок пока нет" показывается.
+  - После buy 0.1 BTC: журнал показывает 1 запись "0.10000000 @ 66,189.56", без realizedPnl (buy).
+  - После sell 0.05 BTC: журнал показывает 2 записи, во второй (sell) — realizedPnl = -$98.84 (цена упала после покупки, красный цвет).
+  - Timestamps в формате HH:MM:SS, locale-aware (ru-RU/en-US).
+- **Cross-rates matrix**: 6 строк × 7 ячеек (42 всего включая заголовки), BTC→ETH = 19.1634, ETH→BTC = 0.052183 (взаимообратные), диагональ = "—".
+- **Адаптив**: моб 390×844 — 0 горизонтального скролла страницы (матрица скроллится внутри своей overflow-x-auto).
+- **VLM-оценка**: trade history **9/10** — "distinct red Sell and green Buy badges, all data highly legible, clean typography, effective color-coding for P&L"; cross-rates **9/10** — "highly clear and readable, excellent contrast, well-spaced typography".
+- **Lint**: 0 ошибок, 0 предупреждений.
+
+## Нерешённые вопросы / риски / рекомендации на следующий раунд
+- **Lighthouse performance audit**: не прогонял. 18 секций + sparklines + тикер + матрица — стоит проверить LCP/CLS/TBT формально.
+- **Static export для GitHub Pages**: `output: "export"` несовместим с API routes. Нужно вынести github-stats в клиентский fetch (CORS) + сторонний сервис для subscribe.
+- **Trade history filtering**: можно добавить фильтр по symbol/side и экспорт в CSV.
+- **Cross-rates live updates**: сейчас матрица статичная (из demoCoins). Можно сделать live-обновление из state симулятора.
+- **Dev-server нестабилен**: sandbox убивает процесс. Нужен supervisor.
+- **More a11y**: axe-core показал 1 known Radix false-positive. Можно добавить `axe-core` в CI.
+
+Приоритет следующего раунда: Lighthouse performance audit + оптимизация (lazy-mount нижних секций), либо live cross-rates (подтянуть из state симулятора), либо фильтр/экспорт trade history.

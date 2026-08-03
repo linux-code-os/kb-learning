@@ -49,8 +49,22 @@ type Order = {
   createdAt: number;
 };
 
+type TradeRecord = {
+  id: string;
+  symbol: string;
+  side: "buy" | "sell";
+  type: "market" | "limit";
+  amount: number;
+  price: number; // цена исполнения
+  total: number; // total USD
+  balanceAfter: number; // баланс после сделки
+  realizedPnl?: number; // реализованная P&L для sell
+  executedAt: number;
+};
+
 const START_BALANCE = 10000; // виртуальные USD
 const HISTORY_LEN = 20; // сколько тиков хранить для sparkline
+const TRADE_HISTORY_LEN = 50; // сколько сделок хранить в журнале
 const STORAGE_KEY = "kb-simulator-state-v1";
 
 type PersistedState = {
@@ -58,6 +72,7 @@ type PersistedState = {
   holdings: Holding[];
   orders: Order[];
   coins: { symbol: string; price: number; change24h: number; history: number[] }[];
+  trades?: TradeRecord[];
 };
 
 function formatUsd(n: number, decimals = 2): string {
@@ -138,6 +153,10 @@ export function TradeSimulator() {
     const saved = loadState();
     return saved?.orders ?? [];
   });
+  const [trades, setTrades] = React.useState<TradeRecord[]>(() => {
+    const saved = loadState();
+    return saved?.trades ?? [];
+  });
   const [selected, setSelected] = React.useState(0);
   const [side, setSide] = React.useState<"buy" | "sell">("buy");
   const [orderType, setOrderType] = React.useState<"market" | "limit">("market");
@@ -165,6 +184,7 @@ export function TradeSimulator() {
         balance,
         holdings,
         orders,
+        trades,
         coins: coins.map((c) => ({
           symbol: c.symbol,
           price: c.price,
@@ -174,7 +194,7 @@ export function TradeSimulator() {
       });
     }, 1500);
     return () => clearTimeout(timer);
-  }, [balance, holdings, orders, coins]);
+  }, [balance, holdings, orders, trades, coins]);
 
   const currentCoin = visibleCoins[selected] ?? visibleCoins[0];
 
@@ -208,6 +228,17 @@ export function TradeSimulator() {
     const price = order.type === "limit" && order.limitPrice != null ? order.limitPrice : coin.price;
     const cost = price * order.amount;
 
+    // Для sell — считаем реализованную P&L относительно avgCost холдинга
+    let realizedPnl: number | undefined;
+    if (order.side === "sell") {
+      const holding = holdings.find((h) => h.symbol === order.symbol);
+      if (holding) {
+        realizedPnl = (price - holding.avgCost) * order.amount;
+      }
+    }
+
+    const newBalance = order.side === "buy" ? balance - cost : balance + cost;
+
     if (order.side === "buy") {
       setBalance((b) => b - cost);
       setHoldings((prev) => {
@@ -238,6 +269,21 @@ export function TradeSimulator() {
         return copy;
       });
     }
+
+    // Записываем сделку в журнал
+    const record: TradeRecord = {
+      id: order.id,
+      symbol: order.symbol,
+      side: order.side,
+      type: order.type,
+      amount: order.amount,
+      price,
+      total: cost,
+      balanceAfter: newBalance,
+      realizedPnl,
+      executedAt: Date.now(),
+    };
+    setTrades((prev) => [record, ...prev].slice(0, TRADE_HISTORY_LEN));
   }
 
   // Тикер цен — обновление каждые 2.5 сек
@@ -353,6 +399,7 @@ export function TradeSimulator() {
     setBalance(START_BALANCE);
     setHoldings([]);
     setOrders([]);
+    setTrades([]);
     setAmount("");
     setLimitPrice("");
     // Сбрасываем цены к исходным и очищаем историю
@@ -593,6 +640,75 @@ export function TradeSimulator() {
                   </ul>
                 </div>
               )}
+
+              {/* Журнал сделок */}
+              <div className="mt-4 border-t border-border/60 pt-4">
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {t("sim.tradeHistory")} ({trades.length})
+                  </span>
+                  {trades.length > 0 && (
+                    <button
+                      onClick={() => setTrades([])}
+                      className="text-[11px] text-muted-foreground transition hover:text-rose-500"
+                    >
+                      {t("sim.clearHistory")}
+                    </button>
+                  )}
+                </div>
+                {trades.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    {t("sim.noTrades")}
+                  </p>
+                ) : (
+                  <ul className="max-h-64 space-y-1.5 overflow-y-auto pr-1">
+                    {trades.map((tr) => {
+                      const pos = (tr.realizedPnl ?? 0) >= 0;
+                      return (
+                        <li
+                          key={tr.id}
+                          className="flex items-center justify-between gap-2 rounded-lg bg-muted/30 px-3 py-2 text-xs"
+                        >
+                          <div className="flex min-w-0 items-center gap-2">
+                            <Badge
+                              variant="secondary"
+                              className={`shrink-0 ${
+                                tr.side === "buy"
+                                  ? "bg-emerald-500/15 text-emerald-500"
+                                  : "bg-rose-500/15 text-rose-500"
+                              }`}
+                            >
+                              {tr.side === "buy" ? t("sim.buy") : t("sim.sell")}
+                            </Badge>
+                            <span className="font-semibold">{tr.symbol}</span>
+                            <span className="font-mono tabular-nums text-muted-foreground">
+                              {formatCoin(tr.amount)} @ {formatUsd(tr.price, tr.price < 1 ? 4 : 2)}
+                            </span>
+                          </div>
+                          <div className="flex shrink-0 items-center gap-2 text-right">
+                            {tr.realizedPnl != null && (
+                              <span
+                                className={`font-mono tabular-nums ${
+                                  pos ? "text-emerald-500" : "text-rose-500"
+                                }`}
+                              >
+                                {pos ? "+" : ""}
+                                {formatUsd(tr.realizedPnl)}
+                              </span>
+                            )}
+                            <span className="font-mono tabular-nums text-muted-foreground">
+                              {new Date(tr.executedAt).toLocaleTimeString(
+                                lang === "ru" ? "ru-RU" : "en-US",
+                                { hour: "2-digit", minute: "2-digit", second: "2-digit" },
+                              )}
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
 
               <p className="mt-5 rounded-xl bg-amber-500/[0.07] p-3 text-[11px] leading-relaxed text-muted-foreground">
                 {t("sim.disclaimer")}
