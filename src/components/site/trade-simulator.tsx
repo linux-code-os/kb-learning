@@ -105,27 +105,25 @@ export function TradeSimulator() {
   const { lang } = useLang();
   const t = useT();
 
-  // Инициализация монет: из localStorage или из demoCoins
+  // Инициализация монет: все 12 из demoCoins, с восстановлением сохранённых
+  // цен/истории из localStorage (если есть). Отображается только coinCount.
   const [coins, setCoins] = React.useState<Coin[]>(() => {
     const saved = loadState();
-    if (saved && saved.coins.length >= 6) {
-      return saved.coins.slice(0, 6).map((c) => ({
-        symbol: c.symbol,
-        name: demoCoins.find((d) => d.symbol === c.symbol)?.name ?? c.symbol,
-        price: c.price,
-        prevPrice: c.price,
-        change24h: c.change24h,
-        history: c.history && c.history.length >= 2 ? c.history : [c.price],
-      }));
-    }
-    return demoCoins.slice(0, 6).map((c) => ({
-      symbol: c.symbol,
-      name: c.name,
-      price: c.priceUsd,
-      prevPrice: c.priceUsd,
-      change24h: (Math.random() - 0.5) * 12,
-      history: [c.priceUsd],
-    }));
+    const savedMap = new Map(
+      saved?.coins?.map((c) => [c.symbol, c] as const) ?? [],
+    );
+    return demoCoins.map((d) => {
+      const s = savedMap.get(d.symbol);
+      return {
+        symbol: d.symbol,
+        name: d.name,
+        price: s?.price ?? d.priceUsd,
+        prevPrice: s?.price ?? d.priceUsd,
+        change24h: s?.change24h ?? (Math.random() - 0.5) * 12,
+        history:
+          s?.history && s.history.length >= 2 ? s.history : [d.priceUsd],
+      };
+    });
   });
 
   const [balance, setBalance] = React.useState<number>(() => {
@@ -146,23 +144,58 @@ export function TradeSimulator() {
   const [amount, setAmount] = React.useState("");
   const [limitPrice, setLimitPrice] = React.useState("");
   const [toast, setToast] = React.useState<{ msg: string; type: "ok" | "err" } | null>(null);
+  const [coinCount, setCoinCount] = React.useState<6 | 9 | 12>(() => {
+    try {
+      const saved = localStorage.getItem("kb-sim-coin-count");
+      if (saved === "9" || saved === "12") return Number(saved) as 9 | 12;
+    } catch {
+      /* ignore */
+    }
+    return 6;
+  });
 
-  // Персистентность: сохраняем состояние при изменениях
+  // Видимые монеты (зависит от coinCount)
+  const visibleCoins = coins.slice(0, coinCount);
+
+  // Персистентность: сохраняем состояние при изменениях (debounce 1.5с,
+  // чтобы не писать в localStorage на каждый ценовой тик)
   React.useEffect(() => {
-    saveState({
-      balance,
-      holdings,
-      orders,
-      coins: coins.map((c) => ({
-        symbol: c.symbol,
-        price: c.price,
-        change24h: c.change24h,
-        history: c.history,
-      })),
-    });
+    const timer = setTimeout(() => {
+      saveState({
+        balance,
+        holdings,
+        orders,
+        coins: coins.map((c) => ({
+          symbol: c.symbol,
+          price: c.price,
+          change24h: c.change24h,
+          history: c.history,
+        })),
+      });
+    }, 1500);
+    return () => clearTimeout(timer);
   }, [balance, holdings, orders, coins]);
 
-  const currentCoin = coins[selected];
+  const currentCoin = visibleCoins[selected] ?? visibleCoins[0];
+
+  // Сохраняем выбор количества монет
+  React.useEffect(() => {
+    try {
+      localStorage.setItem("kb-sim-coin-count", String(coinCount));
+    } catch {
+      /* ignore */
+    }
+  }, [coinCount]);
+
+  // Корректируем selected, если он вне диапазона visibleCoins
+  React.useEffect(() => {
+    if (selected >= coinCount) setSelected(0);
+  }, [coinCount, selected]);
+
+  const changeCoinCount = (n: 6 | 9 | 12) => {
+    setCoinCount(n);
+    if (selected >= n) setSelected(0);
+  };
 
   function showToast(msg: string, type: "ok" | "err") {
     setToast({ msg, type });
@@ -578,11 +611,34 @@ export function TradeSimulator() {
             <Card className="border-border/60 bg-card/60 p-6">
               {/* Список монет */}
               <div className="mb-5">
-                <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {t("sim.market")}
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {t("sim.market")}
+                  </span>
+                  <div
+                    role="group"
+                    aria-label={t("sim.coinCount")}
+                    className="flex items-center gap-0.5 rounded-lg border border-border/60 bg-muted/40 p-0.5"
+                  >
+                    {([6, 9, 12] as const).map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => changeCoinCount(n)}
+                        aria-pressed={coinCount === n}
+                        className={`rounded-md px-2 py-0.5 text-[11px] font-semibold tabular-nums transition ${
+                          coinCount === n
+                            ? "bg-emerald-500/15 text-emerald-500"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                  {coins.map((coin, i) => {
+                  {visibleCoins.map((coin, i) => {
                     const up = coin.price >= coin.prevPrice;
                     const isSel = i === selected;
                     return (

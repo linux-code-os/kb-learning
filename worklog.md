@@ -390,3 +390,58 @@ Task: Assess current project status, perform QA via agent-browser, then add loca
 - **Сравнение цен**: можно добавить "матрицу курсов" — кросс-курсы между всеми монетами.
 
 Приоритет следующего раунда: throttling localStorage writes (debounce 1-2 сек) для производительности, либо добавить переключатель количества монет в симуляторе, либо доработать static export для GitHub Pages.
+
+---
+Task ID: 7
+Agent: main (Z.ai Code) — cron webDevReview round 6
+Task: Assess current project status, perform QA via agent-browser, then add debounce persistence + coin count toggle + styling polish.
+
+## Текущий статус проекта (оценка на старте раунда)
+- После раунда 6: 17 секций, полная i18n, Trade Simulator с localStorage persistence + sparklines + a11y audit, lint чист.
+- Рекомендации прошлого раунда: throttling localStorage writes, переключатель количества монет, styling polish.
+
+## Цели и выполненные изменения
+
+**1. Debounce localStorage persistence** (`trade-simulator.tsx`)
+- Persistence effect обёрнут в `setTimeout(..., 1500)` + `clearTimeout` в cleanup.
+- Теперь localStorage пишется не на каждый ценовой тик (каждые 2.5с), а максимум раз в 1.5с после последнего изменения.
+- Снижает I/O нагрузку, особенно при активной торговле.
+
+**2. Переключатель количества монет (топ-6/9/12)** (`trade-simulator.tsx`)
+- Новый state `coinCount: 6 | 9 | 12`, инициализируется из localStorage `kb-sim-coin-count`, персистится через useEffect.
+- `visibleCoins = coins.slice(0, coinCount)` — отображается только выбранное количество.
+- Инициализация coins переделана: теперь загружает ВСЕ 12 монет из demoCoins (с восстановлением сохранённых цен/history), а отображение регулируется coinCount.
+- Добавлены 3 новые монеты в `demoCoins` (site-data.ts): DOT (Polkadot), MATIC (Polygon), LINK (Chainlink) — теперь 12 шт.
+- UI: toggle-группа `[6][9][12]` рядом с заголовком "Рынок", с `aria-pressed` и `role="group"` + `aria-label`.
+- `changeCoinCount()` сбрасывает `selected`, если он вне диапазона.
+- useEffect корректирует `selected` при изменении coinCount.
+- Перевод `sim.coinCount` добавлен (RU: "Количество монет", EN: "Number of coins").
+
+**3. Styling polish — Hero depth + section dividers**
+- Hero: добавлены 2 декоративных элемента — нижняя подсветка (`bg-emerald-500/8 blur-[100px]`) для глубины + тонкая разделительная линия внизу hero (`bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent`).
+- Новый компонент `SectionDivider` (`section-divider.tsx`): тонкая линия с пульсирующей emerald-точкой в центре, `aria-hidden`.
+- 5 разделителей добавлены в page.tsx между логическими группами секций (About→Audience, Ecosystem→Features, Library→Converter, Simulator→Testimonials, FAQ→GetStarted).
+
+**Bug fix во время разработки:**
+- `ReferenceError: Cannot access 'coinCount' before initialization` — `visibleCoins` использовал `coinCount` до его объявления. Исправлено перемещением `coinCount` state выше `visibleCoins`.
+
+## Результаты верификации (agent-browser)
+- **17 секций**, 0 ошибок браузера, 0 проблем в консоли, lint чист.
+- **Coin count toggle**: переключатель 6/9/12 рендерится, клик на "12" → 12 карточек монет (было 6), localStorage `kb-sim-coin-count` = "12".
+- **Persistence coin count**: после перезагрузки страницы осталось 12 монет (загружено из localStorage).
+- **Debounce persistence**: баланс корректно сохраняется (проверено чтением localStorage).
+- **Section dividers**: 5 шт. рендерятся между секциями.
+- **Hero depth**: декоративные элементы видны (подсветка + линия).
+- **Адаптив**: моб 390×844 — 0 горизонтального скролла.
+- **VLM-оценка** симулятора с 12 монетами: **9/10** — "coin count toggle clearly visible, sparklines on each card, sleek modern dark-mode aesthetic".
+- **Lint**: 0 ошибок, 0 предупреждений.
+
+## Нерешённые вопросы / риски / рекомендации на следующий раунд
+- **Dev-server нестабилен**: sandbox убивает процесс. Нужен supervisor.
+- **Static export для GitHub Pages**: `output: "export"` несовместим с API routes. Нужно вынести github-stats в клиентский fetch (CORS) + сторонний сервис для subscribe.
+- **Cross-rates matrix**: можно добавить матрицу кросс-курсов между всеми монетами (BTC↔ETH, BTC↔SOL, и т.д.) — полезный инструмент.
+- **Trade history log**: симулятор не показывает историю сделок. Можно добавить журнал исполненных ордеров с timestamp.
+- **Performance budget**: 17 секций + sparklines + тикер. Стоит прогнать Lighthouse для формальной оценки LCP/CLS/TBT.
+- **More a11y**: axe-core показал 1 known Radix false-positive. Можно добавить `axe-core` в CI для регрессии.
+
+Приоритет следующего раунда: trade history log (журнал сделок) + Lighthouse performance audit, либо доработать static export для GitHub Pages (клиентский fetch github-stats).

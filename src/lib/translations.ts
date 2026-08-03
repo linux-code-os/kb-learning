@@ -305,6 +305,7 @@ export const translations = {
   "sim.totalPnl": { ru: "Общий P&L", en: "Total P&L" },
   "sim.reset": { ru: "Сбросить", en: "Reset" },
   "sim.market": { ru: "Рынок", en: "Market" },
+  "sim.coinCount": { ru: "Количество монет", en: "Number of coins" },
   "sim.price": { ru: "Цена", en: "Price" },
   "sim.24h": { ru: "24ч", en: "24h" },
   "sim.holding": { ru: "В портфеле", en: "Holding" },

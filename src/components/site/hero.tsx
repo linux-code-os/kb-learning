@@ -105,6 +105,10 @@ export function Hero() {
         <div className="absolute -top-32 left-1/2 h-[460px] w-[680px] -translate-x-1/2 rounded-full bg-emerald-500/20 blur-[120px]" />
         <div className="absolute -top-10 right-0 h-[360px] w-[420px] rounded-full bg-amber-500/15 blur-[120px]" />
         <div className="absolute bottom-0 left-0 h-[300px] w-[380px] rounded-full bg-teal-500/10 blur-[120px]" />
+        {/* Декоративная подсветка снизу для глубины */}
+        <div className="absolute -bottom-20 left-1/2 h-[200px] w-[800px] -translate-x-1/2 rounded-[100%] bg-emerald-500/8 blur-[100px]" />
+        {/* Тонкая разделительная линия внизу hero */}
+        <div className="absolute bottom-0 left-1/2 h-px w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

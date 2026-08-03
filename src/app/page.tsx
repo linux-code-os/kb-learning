@@ -21,6 +21,7 @@ import { Footer } from "@/components/site/footer";
 import { ScrollProgress } from "@/components/site/scroll-progress";
 import { BackToTop } from "@/components/site/back-to-top";
 import { SkipLink } from "@/components/site/skip-link";
+import { SectionDivider } from "@/components/site/section-divider";
 
 export default function Home() {
   return (
@@ -33,17 +34,22 @@ export default function Home() {
         <Ticker />
         <GitHubStats />
         <About />
+        <SectionDivider className="my-4" />
         <Audience />
         <Ecosystem />
+        <SectionDivider className="my-4" />
         <Features />
         <TechStack />
         <Architecture />
         <CryptoLibrary />
+        <SectionDivider className="my-4" />
         <CryptoConverter />
         <TradeSimulator />
+        <SectionDivider className="my-4" />
         <Testimonials />
         <Roadmap />
         <Faq />
+        <SectionDivider className="my-4" />
         <GetStarted />
         <ContactForm />
         <Connect />

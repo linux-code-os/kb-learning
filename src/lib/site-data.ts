@@ -637,6 +637,9 @@ export const demoCoins: { symbol: string; name: string; priceUsd: number }[] = [
   { symbol: "ADA", name: "Cardano", priceUsd: 0.4521 },
   { symbol: "DOGE", name: "Dogecoin", priceUsd: 0.1583 },
   { symbol: "AVAX", name: "Avalanche", priceUsd: 38.92 },
+  { symbol: "DOT", name: "Polkadot", priceUsd: 7.21 },
+  { symbol: "MATIC", name: "Polygon", priceUsd: 0.7102 },
+  { symbol: "LINK", name: "Chainlink", priceUsd: 14.85 },
   { symbol: "USDT", name: "Tether", priceUsd: 1.0 },
 ];
 
