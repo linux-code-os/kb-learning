@@ -11,7 +11,7 @@ export type TranslationKey = keyof typeof translations;
 export const translations = {
   // ===== Глобальное =====
   "brand.name": { ru: "KB Learning", en: "KB Learning" },
-  "brand.subtitle": { ru: "crypto ecosystem", en: "crypto ecosystem" },
+  "brand.subtitle": { ru: "learn crypto", en: "learn crypto" },
 
   "nav.about": { ru: "О проекте", en: "About" },
   "nav.ecosystem": { ru: "Экосистема", en: "Ecosystem" },
@@ -41,12 +41,12 @@ export const translations = {
   "skip.toContent": { ru: "Перейти к содержимому", en: "Skip to content" },
 
   // ===== Hero =====
-  "hero.badge": { ru: "Образовательная экосистема · open-source", en: "Educational ecosystem · open-source" },
+  "hero.badge": { ru: "Образовательный проект · open-source", en: "Educational project · open-source" },
   "hero.title1": { ru: "Учим крипте", en: "Learning crypto" },
   "hero.title2": { ru: "на практике", en: "the practical way" },
   "hero.desc": {
-    ru: "KB Learning — экосистема проектов вокруг криптовалют. Флагман KB Learning — кроссплатформенное приложение для портфеля, тренировки сделок и изучения основ крипты. Без реальных денег и рисков.",
-    en: "KB Learning is an ecosystem of projects around cryptocurrencies. The flagship, KB Learning, is a cross-platform app for portfolio tracking, trade practice, and learning crypto fundamentals. No real money. No risk.",
+    ru: "KB Learning — образовательный проект для изучения криптовалют: симулятор торговли, конвертер, кросс-курсы и библиотека из 17 тем. Тренируйтесь без реальных денег и рисков.",
+    en: "KB Learning is an educational project for learning cryptocurrencies: a trading simulator, converter, cross-rates, and a library of 17 topics. Practice with no real money and no risk.",
   },
   "hero.balance": { ru: "Общий баланс", en: "Total balance" },
   "hero.simulation": { ru: "Симуляция", en: "Simulation" },
@@ -134,7 +134,7 @@ export const translations = {
 
   "tech.eyebrow": { ru: "Технологии", en: "Tech stack" },
   "tech.title1": { ru: "Современный стек", en: "A modern" },
-  "tech.titleAccent": { ru: "Kotlin-экосистемы", en: "Kotlin-ecosystem stack" },
+  "tech.titleAccent": { ru: "от Kotlin-сообщества", en: "from the Kotlin community" },
   "tech.desc": {
     ru: "Под капотом — проверенные инструменты от JetBrains и сообщества Kotlin. Каждая технология выбрана под конкретную задачу.",
     en: "Under the hood: proven tools from JetBrains and the Kotlin community. Each technology chosen for a specific job.",
@@ -191,7 +191,7 @@ export const translations = {
 
   "roadmap.eyebrow": { ru: "Roadmap", en: "Roadmap" },
   "roadmap.title1": { ru: "Куда движется", en: "Where the" },
-  "roadmap.titleAccent": { ru: "экосистема", en: "ecosystem is heading" },
+  "roadmap.titleAccent": { ru: "проект", en: "the project is heading" },
   "roadmap.desc": {
     ru: "Развитие KB Learning по вехам. Зелёное — сделано, янтарное — в активной разработке, серое — в планах. Roadmap обновляется по мере релизов.",
     en: "KB Learning development by milestones. Green — done, amber — in active development, grey — planned. The roadmap updates with each release.",
@@ -205,8 +205,8 @@ export const translations = {
   "faq.title1": { ru: "Частые вопросы", en: "Common questions," },
   "faq.titleAccent": { ru: "без воды", en: "no fluff" },
   "faq.desc": {
-    ru: "Собрали то, что чаще всего спрашивают о KB Learning и экосистеме. Не нашли ответ — заведите issue на GitHub.",
-    en: "We collected what people ask most about KB Learning and the ecosystem. Didn't find an answer? Open an issue on GitHub.",
+    ru: "Собрали то, что чаще всего спрашивают о KB Learning. Не нашли ответ — заведите issue на GitHub.",
+    en: "We collected what people ask most about KB Learning. Didn't find an answer? Open an issue on GitHub.",
   },
   "faq.notFoundTitle": { ru: "Не нашли ответ?", en: "Didn't find an answer?" },
   "faq.notFoundDesc": {
@@ -239,8 +239,8 @@ export const translations = {
   "contact.title1": { ru: "Будем на связи —", en: "Let's stay in touch —" },
   "contact.titleAccent": { ru: "без спама", en: "no spam" },
   "contact.desc": {
-    ru: "Подпишитесь на обновления экосистемы или задайте вопрос. Форма обрабатывается на сервере, email нигде не публикуется.",
-    en: "Subscribe to ecosystem updates or ask a question. The form is processed on the server, your email is never published.",
+    ru: "Подпишитесь на обновления проекта или задайте вопрос. Форма обрабатывается на сервере, email нигде не публикуется.",
+    en: "Subscribe to project updates or ask a question. The form is processed on the server, your email is never published.",
   },
   "contact.whatYouGet": { ru: "Что вы получите", en: "What you'll get" },
   "contact.githubPref": {
@@ -259,8 +259,8 @@ export const translations = {
   "contact.sending": { ru: "Отправляем...", en: "Sending..." },
   "contact.done": { ru: "Готово", en: "Done" },
   "contact.successNewsletter": {
-    ru: "Подписка оформлена! Мы будем присылать обновления экосистемы.",
-    en: "Subscription confirmed! We'll send you ecosystem updates.",
+    ru: "Подписка оформлена! Мы будем присылать обновления проекта.",
+    en: "Subscription confirmed! We'll send you project updates.",
   },
   "contact.successContact": {
     ru: "Сообщение отправлено! Ответим в ближайшее время.",
@@ -273,7 +273,7 @@ export const translations = {
 
   "connect.eyebrow": { ru: "Контакты", en: "Contact" },
   "connect.title1": { ru: "Будем на связи", en: "Let's stay" },
-  "connect.titleAccent": { ru: "в экосистеме", en: "in the ecosystem" },
+  "connect.titleAccent": { ru: "в проекте", en: "with the project" },
   "connect.desc": {
     ru: "GitHub — наш основной дом. Соцсети подключаются по мере запуска: следите за репозиторием, чтобы не пропустить.",
     en: "GitHub is our main home. Socials come online as they launch: watch the repo so you don't miss it.",

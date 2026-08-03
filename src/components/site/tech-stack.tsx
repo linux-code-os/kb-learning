@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/site/section-heading";
 import { techStack } from "@/lib/site-data";
+import { useT } from "@/components/site/language-toggle";
 
 function TechBadge({
   name,
@@ -23,6 +24,7 @@ function TechBadge({
 }
 
 export function TechStack() {
+  const t = useT();
   // дублируем для бесшовной ленты
   const marquee = [...techStack, ...techStack];
 
@@ -34,14 +36,14 @@ export function TechStack() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Технологии"
+          eyebrow={t("tech.eyebrow")}
           title={
             <>
-              Современный стек{" "}
-              <span className="text-gradient-brand">Kotlin-экосистемы</span>
+              {t("tech.title1")}{" "}
+              <span className="text-gradient-brand">{t("tech.titleAccent")}</span>
             </>
           }
-          description="Под капотом — проверенные инструменты от JetBrains и сообщества Kotlin. Каждая технология выбрана под конкретную задачу."
+          description={t("tech.desc")}
         />
 
         {/* Бегущая лента технологий */}

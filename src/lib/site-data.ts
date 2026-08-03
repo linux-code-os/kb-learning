@@ -13,10 +13,10 @@ export const siteConfig = {
     en: "Learning crypto the practical way",
   },
   description: {
-    ru: "Экосистема образовательных проектов вокруг криптовалют: KB Learning — кроссплатформенное приложение для отслеживания портфеля, тренировки торговли и изучения основ крипты. Без реальных денег. Без рисков. Только знания.",
-    en: "An ecosystem of educational projects around cryptocurrencies: KB Learning is a cross-platform app for portfolio tracking, trading practice, and learning crypto fundamentals. No real money. No risk. Just knowledge.",
+    ru: "KB Learning — образовательный проект для изучения криптовалют: симулятор торговли, конвертер, кросс-курсы и библиотека из 17 тем. Без реальных денег. Без рисков. Только знания.",
+    en: "KB Learning is an educational project for learning cryptocurrencies: a trading simulator, converter, cross-rates, and a library of 17 topics. No real money. No risk. Just knowledge.",
   },
-  // Главная ссылка на GitHub-профиль экосистемы
+  // Главная ссылка на GitHub-репозиторий проекта
   github: "https://github.com/linux-code-os",
   flagshipRepo: "https://github.com/linux-code-os/kb-learning",
   owner: {
@@ -32,79 +32,7 @@ export const siteConfig = {
 } as const;
 
 /**
- * Экосистема репозиториев на GitHub.
- * Флагман — KB_Learning, остальные — смежные проекты автора.
- */
-export type EcosystemProject = {
-  name: string;
-  repo: string;
-  url: string;
-  description: LocalStr;
-  language: string;
-  languageColor: string;
-  flagship?: boolean;
-  icon: "wallet" | "terminal" | "gamepad" | "map";
-  tags: string[];
-};
-
-export const ecosystem: EcosystemProject[] = [
-  {
-    name: "KB Learning",
-    repo: "kb-learning",
-    url: "https://github.com/linux-code-os/kb-learning",
-    description: {
-      ru: "Compose Multiplatform приложение (Android + iOS из одной кодовой базы Kotlin) для отслеживания крипто-портфеля, тренировки сделок в симулированном рынке и изучения основ криптовалют.",
-      en: "A Compose Multiplatform app (Android + iOS from a single Kotlin codebase) for tracking a crypto portfolio, practicing trades on a simulated market, and learning crypto fundamentals.",
-    },
-    language: "Kotlin",
-    languageColor: "#7F52FF",
-    flagship: true,
-    icon: "wallet",
-    tags: ["KMP", "Compose", "Ktor", "iOS", "Android"],
-  },
-  {
-    name: "KubSU",
-    repo: "KubSU",
-    url: "https://github.com/linux-code-os/KubSU",
-    description: {
-      ru: "Вспомогательные скрипты и утилиты для университетских задач и окружения разработки.",
-      en: "Helper scripts and utilities for university coursework and development environments.",
-    },
-    language: "Shell",
-    languageColor: "#89E051",
-    icon: "terminal",
-    tags: ["Shell", "Automation"],
-  },
-  {
-    name: "comand_project",
-    repo: "comand_project",
-    url: "https://github.com/linux-code-os/comand_project",
-    description: {
-      ru: "Командный учебный проект на C# — практика архитектуры и совместной разработки.",
-      en: "A team learning project in C# — practicing architecture and collaborative development.",
-    },
-    language: "C#",
-    languageColor: "#178600",
-    icon: "gamepad",
-    tags: ["C#", "Team"],
-  },
-  {
-    name: "geodezia",
-    repo: "geodezia",
-    url: "https://github.com/linux-code-os/geodezia",
-    description: {
-      ru: "Инструменты геодезических расчётов на Python — вычисления, обработка данных и визуализация.",
-      en: "Geodetic calculation tools in Python — computation, data processing, and visualization.",
-    },
-    language: "Python",
-    languageColor: "#3572A5",
-    icon: "map",
-    tags: ["Python", "Data"],
-  },
-];
-
-/**
- * Возможности KB Learning — флагманского продукта экосистемы.
+ * Возможности KB Learning.
  */
 export type Feature = {
   title: LocalStr;
@@ -379,7 +307,7 @@ export const prerequisites: Prerequisite[] = [
 ];
 
 /**
- * Социальные сети экосистемы.
+ * Социальные сети проекта.
  * По умолчанию ведут на GitHub-профиль — обновите ссылки при необходимости.
  */
 export type Social = {
@@ -450,7 +378,6 @@ export const stats: { value: number; suffix: string; label: string }[] = [
  */
 export const navLinks: { href: string; labelKey: string }[] = [
   { href: "#about", labelKey: "nav.about" },
-  { href: "#ecosystem", labelKey: "nav.ecosystem" },
   { href: "#features", labelKey: "nav.features" },
   { href: "#tech", labelKey: "nav.tech" },
   { href: "#library", labelKey: "nav.library" },

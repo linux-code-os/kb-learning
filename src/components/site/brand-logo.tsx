@@ -21,7 +21,7 @@ export function BrandLogo({
       <span className="text-gradient-brand text-base">KB Learning</span>
       {withText && (
         <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-          crypto ecosystem
+          learn crypto
         </span>
       )}
     </span>

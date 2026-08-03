@@ -4,7 +4,6 @@ import { Ticker } from "@/components/site/ticker";
 import { GitHubStats } from "@/components/site/github-stats";
 import { About } from "@/components/site/about";
 import { Audience } from "@/components/site/audience";
-import { Ecosystem } from "@/components/site/ecosystem";
 import { Features } from "@/components/site/features";
 import { TechStack } from "@/components/site/tech-stack";
 import { Architecture } from "@/components/site/architecture";
@@ -37,7 +36,6 @@ export default function Home() {
         <About />
         <SectionDivider className="my-4" />
         <Audience />
-        <Ecosystem />
         <SectionDivider className="my-4" />
         <Features />
         <TechStack />
