@@ -14,12 +14,13 @@ import {
 } from "@/components/ui/sheet";
 import { BrandLogo } from "@/components/site/brand-logo";
 import { ThemeToggle } from "@/components/site/theme-toggle";
-import { LanguageToggle } from "@/components/site/language-toggle";
+import { LanguageToggle, useT } from "@/components/site/language-toggle";
 import { navLinks, siteConfig } from "@/lib/site-data";
 
 export function Header() {
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const t = useT();
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -40,20 +41,20 @@ export function Header() {
         <Link
           href="#top"
           className="rounded-lg outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-emerald-500/60"
-          aria-label="KB Learning — наверх"
+          aria-label={t("action.scrollToTop")}
         >
           <BrandLogo />
         </Link>
 
         {/* Десктоп-навигация */}
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label={t("action.scrollToTop")}>
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50"
             >
-              {link.label}
+              {t(link.labelKey as Parameters<typeof t>[0])}
             </Link>
           ))}
         </nav>
@@ -70,9 +71,10 @@ export function Header() {
               href={siteConfig.flagshipRepo}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={t("action.openGithub")}
             >
               <Github className="h-4 w-4" />
-              GitHub
+              {t("action.github")}
             </a>
           </Button>
 
@@ -83,7 +85,7 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 className="h-9 w-9 rounded-full border border-border/60 lg:hidden"
-                aria-label="Открыть меню"
+                aria-label={t("action.openMenu")}
               >
                 <Menu className="h-5 w-5" />
               </Button>
@@ -101,7 +103,7 @@ export function Header() {
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8"
-                    aria-label="Закрыть меню"
+                    aria-label={t("action.closeMenu")}
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -127,9 +129,9 @@ export function Header() {
                       <SheetClose asChild>
                         <Link
                           href={link.href}
-                          className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                          className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50"
                         >
-                          {link.label}
+                          {t(link.labelKey as Parameters<typeof t>[0])}
                           <ArrowUpRight className="h-4 w-4 opacity-50" />
                         </Link>
                       </SheetClose>
@@ -147,7 +149,7 @@ export function Header() {
                           rel="noopener noreferrer"
                         >
                           <Github className="h-4 w-4" />
-                          Открыть на GitHub
+                          {t("action.openGithub")}
                         </a>
                       </Button>
                     </SheetClose>

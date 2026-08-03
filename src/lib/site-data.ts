@@ -322,16 +322,16 @@ export const stats: { value: number; suffix: string; label: string }[] = [
 /**
  * Навигация по странице.
  */
-export const navLinks: { href: string; label: string }[] = [
-  { href: "#about", label: "О проекте" },
-  { href: "#ecosystem", label: "Экосистема" },
-  { href: "#features", label: "Возможности" },
-  { href: "#tech", label: "Технологии" },
-  { href: "#library", label: "Библиотека" },
-  { href: "#roadmap", label: "Roadmap" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#start", label: "Запуск" },
-  { href: "#connect", label: "Контакты" },
+export const navLinks: { href: string; labelKey: string }[] = [
+  { href: "#about", labelKey: "nav.about" },
+  { href: "#ecosystem", labelKey: "nav.ecosystem" },
+  { href: "#features", labelKey: "nav.features" },
+  { href: "#tech", labelKey: "nav.tech" },
+  { href: "#library", labelKey: "nav.library" },
+  { href: "#roadmap", labelKey: "nav.roadmap" },
+  { href: "#faq", labelKey: "nav.faq" },
+  { href: "#start", labelKey: "nav.start" },
+  { href: "#connect", labelKey: "nav.connect" },
 ];
 
 /**

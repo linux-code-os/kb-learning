@@ -19,13 +19,15 @@ import { Connect } from "@/components/site/connect";
 import { Footer } from "@/components/site/footer";
 import { ScrollProgress } from "@/components/site/scroll-progress";
 import { BackToTop } from "@/components/site/back-to-top";
+import { SkipLink } from "@/components/site/skip-link";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <SkipLink />
       <ScrollProgress />
       <Header />
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <Hero />
         <Ticker />
         <GitHubStats />

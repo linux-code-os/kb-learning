@@ -13,17 +13,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { siteConfig, stats } from "@/lib/site-data";
 import { useCountUp } from "@/lib/use-count-up";
+import { useT } from "@/components/site/language-toggle";
+import type { TranslationKey } from "@/lib/translations";
 
 function StatCell({
   value,
   suffix,
-  label,
+  labelKey,
 }: {
   value: number;
   suffix: string;
-  label: string;
+  labelKey: TranslationKey;
 }) {
   const { value: animated, ref } = useCountUp(value);
+  const t = useT();
   return (
     <div className="bg-background/80 p-5 text-center backdrop-blur">
       <div
@@ -34,11 +37,13 @@ function StatCell({
         <span className="text-gradient-brand">{suffix}</span>
       </div>
       <div className="mt-1 text-xs text-muted-foreground sm:text-sm">
-        {label}
+        {t(labelKey)}
       </div>
     </div>
   );
 }
+
+
 
 function CoinChip({
   symbol,
@@ -87,9 +92,11 @@ function CoinChip({
 }
 
 export function Hero() {
+  const t = useT();
   return (
     <section
       id="top"
+      aria-labelledby="hero-heading"
       className="relative overflow-hidden pt-16 pb-20 sm:pt-24 sm:pb-28"
     >
       {/* Фон: gradient mesh + сетка */}
@@ -110,19 +117,20 @@ export function Hero() {
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold text-emerald-500"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            Образовательная экосистема · open-source
+            {t("hero.badge")}
           </motion.div>
 
           {/* Заголовок */}
           <motion.h1
+            id="hero-heading"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.05 }}
             className="text-balance text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
           >
-            Учим крипте
+            {t("hero.title1")}
             <br />
-            <span className="text-gradient-brand">на практике</span>
+            <span className="text-gradient-brand">{t("hero.title2")}</span>
           </motion.h1>
 
           {/* Подзаголовок */}
@@ -132,11 +140,7 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.12 }}
             className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
-            {siteConfig.name} — экосистема проектов вокруг криптовалют.
-            Флагман{" "}
-            <span className="font-semibold text-foreground">KB Wallet</span> —
-            кроссплатформенное приложение для портфеля, тренировки сделок и
-            изучения основ крипты. Без реальных денег и рисков.
+            {t("hero.desc")}
           </motion.p>
 
           {/* CTA */}
@@ -157,7 +161,7 @@ export function Hero() {
                 rel="noopener noreferrer"
               >
                 <Github className="h-5 w-5" />
-                Смотреть на GitHub
+                {t("action.viewOnGithub")}
               </a>
             </Button>
             <Button
@@ -170,7 +174,7 @@ export function Hero() {
                 href="#start"
               >
                 <BookOpen className="h-5 w-5" />
-                Как запустить
+                {t("action.howToRun")}
               </a>
             </Button>
           </motion.div>
@@ -184,15 +188,15 @@ export function Hero() {
           >
             <span className="inline-flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-              Без реальных средств
+              {t("hero.trust.noMoney")}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Smartphone className="h-3.5 w-3.5 text-amber-500" />
-              Android + iOS из одного кода
+              {t("hero.trust.crossPlatform")}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <BookOpen className="h-3.5 w-3.5 text-teal-500" />
-              17 тем в библиотеке
+              {t("hero.trust.topics")}
             </span>
           </motion.div>
         </div>
@@ -214,10 +218,10 @@ export function Hero() {
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-muted-foreground">
-                  Общий баланс
+                  {t("hero.balance")}
                 </span>
                 <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-500">
-                  Симуляция
+                  {t("hero.simulation")}
                 </span>
               </div>
               <div className="mt-2 flex items-end gap-2">
@@ -301,12 +305,14 @@ export function Hero() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mx-auto mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 sm:grid-cols-4"
         >
-          {stats.map((s) => (
+          {stats.map((s, i) => (
             <StatCell
-              key={s.label}
+              key={i}
               value={s.value}
               suffix={s.suffix}
-              label={s.label}
+              labelKey={
+                ["stat.topics", "stat.platforms", "stat.modules", "stat.educational"][i] as TranslationKey
+              }
             />
           ))}
         </motion.div>
@@ -321,9 +327,9 @@ export function Hero() {
           <a
             href="#about"
             className="group inline-flex flex-col items-center gap-2 text-xs text-muted-foreground transition hover:text-foreground"
-            aria-label="Прокрутить вниз"
+            aria-label={t("action.scrollDown")}
           >
-            Листайте ниже
+            {t("action.scrollDown")}
             <span className="flex h-9 w-5 items-start justify-center rounded-full border border-border p-1">
               <motion.span
                 animate={{ y: [0, 10, 0] }}

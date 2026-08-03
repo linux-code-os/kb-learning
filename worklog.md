@@ -155,3 +155,62 @@ Task: Assess current project status, perform QA via agent-browser, then add new 
 - **OG-image динамический**: текущий OG статичный (один SVG). Можно генерировать персонализированный OG per-page, но для визитки текущего достаточно.
 
 Приоритет следующего раунда: добить полную i18n (переводы RU/EN) ИЛИ усилить accessibility (контраст, aria-live, floating labels). Рекомендую сначала i18n, так как переключатель уже есть и вводит в заблуждение.
+
+---
+Task ID: 4
+Agent: main (Z.ai Code) — cron webDevReview round 3
+Task: Assess current project status, perform QA via agent-browser, then implement full i18n RU/EN + accessibility polish.
+
+## Текущий статус проекта (оценка на старте раунда)
+- После раунда 3: 16 секций, lint чист, 0 ошибок браузера, OG-image, contact form, testimonials, language toggle.
+- КЛЮЧЕВАЯ ПРОБЛЕМА: LanguageToggle переключает `lang` в контексте, но тексты компонентов НЕ переведены — переключатель вводит пользователя в заблуждение (выбираешь EN, а контент остаётся русским).
+- Рекомендация прошлого раунда: добить полную i18n ИЛИ усилить accessibility.
+
+## Цели и выполненные изменения (фокус: функциональная i18n + a11y)
+
+**1. Словарь переводов `src/lib/translations.ts`** (новый файл, ~180 ключей)
+- Полный RU/EN словарь всех UI-строк: навигация, hero, все 16 секций (eyebrow/title/desc), кнопки, формы, footer, aria-метки.
+- Структура: `namespace.key -> { ru, en }`, типобезопасно через `TranslationKey`.
+- Экспорт `Lang` типа для переиспользования.
+
+**2. `useT()` hook** (`language-toggle.tsx`)
+- Хук-переводчик `t(key)` на базе существующего `useLang()` контекста.
+- Обновлён `LanguageProvider`: при смене языка синхронизирует `document.documentElement.lang` для скринридеров.
+- `LanguageToggle` теперь использует `t("action.changeLanguage")` для aria-label.
+
+**3. Рефакторинг компонентов на переводы:**
+- **Header**: navLinks изменены с `label` на `labelKey`, все строки (nav, aria-labels, GitHub-кнопка, мобильное меню) через `t()`.
+- **Hero**: eyebrow, заголовок (title1/title2), описание, CTA-кнопки, бейджи доверия, баланс, "Симуляция", stats-метки, scroll-down — всё переведено. Добавлен `aria-labelledby="hero-heading"` и `id` на h1.
+- **Footer**: "Разделы", "Соцсети", "скоро", копирайт, "Наверх" — переведено.
+- **ContactForm**: eyebrow, title, description, табы (Подписка/Вопрос → Subscribe/Question), labels (имя/email/сообщение), кнопка submit (3 состояния: sending/done/subscribe|send), feedback-сообщения, список "что вы получите", GitHub-pref — всё переведено.
+
+**4. Accessibility improvements:**
+- **SkipLink** (`skip-link.tsx`, новый) — `sr-only` ссылка "Перейти к содержимому / Skip to content", появляется при фокусе (`focus:not-sr-only`), переводит к `#main`. Добавлен в page.tsx.
+- **aria-live="polite" + role="status"** на feedback-блоке контактной формы — скринридеры анонсируют результат отправки.
+- **role="alert"** на ошибке валидации email.
+- **focus-visible:ring** добавлен ко всем интерактивным элементам (nav links, footer links, social links, GitHub buttons).
+- **aria-hidden="true"** на декоративных иконках-маркерах (⚠).
+- **`<main id="main">`** для якоря skip-link.
+
+**5. navLinks рефакторинг** (`site-data.ts`)
+- `label: string` → `labelKey: string` (ключ перевода), что убирает дублирование строк между site-data и translations.
+
+## Результаты верификации (agent-browser)
+- **16 секций**, 0 ошибок браузера, 0 проблем в консоли.
+- **i18n RU → EN**: переключение на English меняет: H1 → "Learning crypto the practical way", badge → "Educational ecosystem · open-source", nav → "About", footer → "Sections", skip-link → "Skip to content", `document.documentElement.lang` → "en". localStorage сохраняет выбор.
+- **i18n EN → RU**: обратное переключение корректно возвращает русский: H1 → "Учим крипте на практике", nav → "О проекте", skip-link → "Перейти к содержимому", lang → "ru".
+- **ContactForm переводы**: eyebrow "Let's stay in touch — no spam" / "Будем на связи — без спама", табы "Subscribe"/"Question", submit-кнопка "Subscribe"/"Подписаться" — зависят от языка.
+- **Skip-link**: присутствует в DOM, `sr-only` по умолчанию, переводится.
+- **aria-live**: feedback-блок имеет `role="status"` + `aria-live="polite"`.
+- **Адаптив**: моб 390×844 — 0 горизонтального скролла (390=390).
+- **VLM-оценка** EN Hero: **9/10** — "English translation is natural, grammatically correct, and effectively conveys the project's value proposition with clear, professional terminology".
+- **Lint**: 0 ошибок, 0 предупреждений.
+
+## Нерешённые вопросы / риски / рекомендации на следующий раунд
+- **Частичная i18n data-секций**: переведены UI-каркасы (nav, заголовки, кнопки, формы), но data-массивы (features, testimonials, FAQ, roadmap, ecosystem, techStack) пока только на русском. Для полной i18n нужно добавить `en`-поля к каждому элементу этих массивов. Объём большой (~50 элементов × 2-3 строки), но механика готова.
+- **Дев-сервер нестабилен**: в этом раунде dev-server несколько раз падал (процесс убивался sandbox-окружением после завершения bash-команд). Решалось перезапуском `bun run dev &`. Системе стоит настроить более надёжный auto-restart.
+- **Полный static export для GitHub Pages**: `output: "export"` несовместим с API routes. Нужно либо вынести github-stats в клиентский fetch (CORS), либо хостить на Vercel/Netlify. Workflow из раунда 3 требует доработки.
+- **Accessibility audit**: стоит прогнать через axe-core или Lighthouse a11y для полной картины. Текущие улучшения (skip-link, aria-live, focus-visible, lang-синхронизация) покрывают основные WCAG-критерии, но formal audit не проводился.
+- **OG-image на EN**: текущий OG статичный на русском. При EN-режиме логично отдавать EN-версию OG — можно через параметр `?lang=en` в OG route.
+
+Приоритет следующего раунда: добить переводы data-массивов (features/testimonials/FAQ/roadmap на EN) для полной i18n, либо провести formal a11y audit (axe-core) и закрыть оставшиеся WCAG-нарушения.

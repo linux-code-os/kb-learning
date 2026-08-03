@@ -10,10 +10,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { siteConfig } from "@/lib/site-data";
+import { useT } from "@/components/site/language-toggle";
 
 type Mode = "newsletter" | "contact";
 
 export function ContactForm() {
+  const t = useT();
   const [mode, setMode] = React.useState<Mode>("newsletter");
   const [email, setEmail] = React.useState("");
   const [name, setName] = React.useState("");
@@ -47,18 +49,23 @@ export function ContactForm() {
 
       if (!res.ok || !data.ok) {
         setStatus("error");
-        setFeedback(data.error ?? "Не удалось отправить. Попробуйте позже.");
+        setFeedback(data.error ?? t("contact.emailInvalid"));
         return;
       }
 
       setStatus("success");
-      setFeedback(data.message ?? "Готово!");
+      setFeedback(
+        data.message ??
+          (mode === "newsletter"
+            ? t("contact.successNewsletter")
+            : t("contact.successContact")),
+      );
       setEmail("");
       setName("");
       setMessage("");
     } catch {
       setStatus("error");
-      setFeedback("Сеть недоступна. Попробуйте позже.");
+      setFeedback(t("contact.emailInvalid"));
     }
   };
 
@@ -75,14 +82,14 @@ export function ContactForm() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Связаться"
+          eyebrow={t("contact.eyebrow")}
           title={
             <>
-              Будем на связи —{" "}
-              <span className="text-gradient-brand">без спама</span>
+              {t("contact.title1")}{" "}
+              <span className="text-gradient-brand">{t("contact.titleAccent")}</span>
             </>
           }
-          description="Подпишитесь на обновления экосистемы или задайте вопрос. Форма обрабатывается на сервере, email нигде не публикуется."
+          description={t("contact.desc")}
         />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-5">
@@ -100,32 +107,31 @@ export function ContactForm() {
                   <Mail className="h-5 w-5" />
                 </div>
                 <h3 className="text-base font-bold">
-                  Что вы получите
+                  {t("contact.whatYouGet")}
                 </h3>
                 <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
-                    Уведомления о новых релизах KB Wallet
+                    {t("contact.get.releases")}
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
-                    Анонсы новых тем в крипто-библиотеке
+                    {t("contact.get.topics")}
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
-                    Ответы на ваши вопросы
+                    {t("contact.get.answers")}
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
-                    Никакого спама — отписка в один клик
+                    {t("contact.get.nospam")}
                   </li>
                 </ul>
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-card/40 p-6">
                 <p className="text-sm text-muted-foreground">
-                  Prefer GitHub? Заведите issue — это самый прозрачный способ
-                  задать вопрос и получить публичный ответ.
+                  {t("contact.githubPref")}
                 </p>
                 <Button
                   asChild
@@ -138,7 +144,7 @@ export function ContactForm() {
                     rel="noopener noreferrer"
                   >
                     <MessageSquare className="h-4 w-4" />
-                    Открыть issue
+                    {t("contact.openIssue")}
                   </a>
                 </Button>
               </div>
@@ -167,13 +173,13 @@ export function ContactForm() {
                     value="newsletter"
                     className="rounded-lg data-[state=active]:bg-emerald-500/15 data-[state=active]:text-emerald-500"
                   >
-                    Подписка
+                    {t("contact.tab.newsletter")}
                   </TabsTrigger>
                   <TabsTrigger
                     value="contact"
                     className="rounded-lg data-[state=active]:bg-emerald-500/15 data-[state=active]:text-emerald-500"
                   >
-                    Вопрос
+                    {t("contact.tab.contact")}
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
@@ -185,7 +191,7 @@ export function ContactForm() {
                       htmlFor="cf-name"
                       className="text-xs font-medium uppercase tracking-wider text-muted-foreground"
                     >
-                      Ваше имя
+                      {t("contact.name")}
                     </label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -208,7 +214,7 @@ export function ContactForm() {
                     htmlFor="cf-email"
                     className="text-xs font-medium uppercase tracking-wider text-muted-foreground"
                   >
-                    Email
+                    {t("contact.email")}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -263,17 +269,17 @@ export function ContactForm() {
                   {status === "loading" ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Отправляем...
+                      {t("contact.sending")}
                     </>
                   ) : status === "success" ? (
                     <>
                       <CheckCircle2 className="h-4 w-4" />
-                      Готово
+                      {t("contact.done")}
                     </>
                   ) : (
                     <>
                       <Send className="h-4 w-4" />
-                      {mode === "newsletter" ? "Подписаться" : "Отправить"}
+                      {mode === "newsletter" ? t("contact.subscribe") : t("contact.send")}
                     </>
                   )}
                 </Button>
