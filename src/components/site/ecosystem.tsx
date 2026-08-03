@@ -146,12 +146,12 @@ export function Ecosystem() {
           <GitFork className="h-4 w-4" />
           {t("ecosystem.allOpen")}{" "}
           <a
-            href="https://github.com/linux-code-dev"
+            href="https://github.com/linux-code-os"
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-emerald-500 hover:underline"
           >
-            github.com/linux-code-dev
+            github.com/linux-code-os
           </a>
         </motion.div>
       </div>

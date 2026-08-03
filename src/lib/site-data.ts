@@ -17,16 +17,16 @@ export const siteConfig = {
     en: "An ecosystem of educational projects around cryptocurrencies: KB Learning is a cross-platform app for portfolio tracking, trading practice, and learning crypto fundamentals. No real money. No risk. Just knowledge.",
   },
   // Главная ссылка на GitHub-профиль экосистемы
-  github: "https://github.com/linux-code-dev",
-  flagshipRepo: "https://github.com/linux-code-dev/KB_Learning",
+  github: "https://github.com/linux-code-os",
+  flagshipRepo: "https://github.com/linux-code-os/kb-learning",
   owner: {
-    name: "Aleksey Balandin",
-    handle: "linux-code-dev",
+    name: "linux-code-os",
+    handle: "linux-code-os",
     bio: {
       ru: "Software Engineer, интересуется системным программированием, криптографией и современными стеками.",
       en: "Software Engineer interested in systems programming, cryptography, and modern tech stacks.",
     },
-    avatar: "https://avatars.githubusercontent.com/u/174013453?v=4",
+    avatar: "https://avatars.githubusercontent.com/u/312413769?v=4",
   },
   email: "mailto:hello@kblearning.dev",
 } as const;
@@ -50,8 +50,8 @@ export type EcosystemProject = {
 export const ecosystem: EcosystemProject[] = [
   {
     name: "KB Learning",
-    repo: "KB_Learning",
-    url: "https://github.com/linux-code-dev/KB_Learning",
+    repo: "kb-learning",
+    url: "https://github.com/linux-code-os/kb-learning",
     description: {
       ru: "Compose Multiplatform приложение (Android + iOS из одной кодовой базы Kotlin) для отслеживания крипто-портфеля, тренировки сделок в симулированном рынке и изучения основ криптовалют.",
       en: "A Compose Multiplatform app (Android + iOS from a single Kotlin codebase) for tracking a crypto portfolio, practicing trades on a simulated market, and learning crypto fundamentals.",
@@ -65,7 +65,7 @@ export const ecosystem: EcosystemProject[] = [
   {
     name: "KubSU",
     repo: "KubSU",
-    url: "https://github.com/linux-code-dev/KubSU",
+    url: "https://github.com/linux-code-os/KubSU",
     description: {
       ru: "Вспомогательные скрипты и утилиты для университетских задач и окружения разработки.",
       en: "Helper scripts and utilities for university coursework and development environments.",
@@ -78,7 +78,7 @@ export const ecosystem: EcosystemProject[] = [
   {
     name: "comand_project",
     repo: "comand_project",
-    url: "https://github.com/linux-code-dev/comand_project",
+    url: "https://github.com/linux-code-os/comand_project",
     description: {
       ru: "Командный учебный проект на C# — практика архитектуры и совместной разработки.",
       en: "A team learning project in C# — practicing architecture and collaborative development.",
@@ -91,7 +91,7 @@ export const ecosystem: EcosystemProject[] = [
   {
     name: "geodezia",
     repo: "geodezia",
-    url: "https://github.com/linux-code-dev/geodezia",
+    url: "https://github.com/linux-code-os/geodezia",
     description: {
       ru: "Инструменты геодезических расчётов на Python — вычисления, обработка данных и визуализация.",
       en: "Geodetic calculation tools in Python — computation, data processing, and visualization.",
@@ -393,9 +393,9 @@ export type Social = {
 export const socials: Social[] = [
   {
     name: "GitHub",
-    href: "https://github.com/linux-code-dev",
+    href: "https://github.com/linux-code-os",
     icon: "github",
-    handle: "@linux-code-dev",
+    handle: "@linux-code-os",
     available: true,
   },
   {

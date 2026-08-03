@@ -146,7 +146,7 @@ export function Roadmap() {
             <Rocket className="h-4 w-4 text-emerald-500" />
             {t("roadmap.followProgress")}{" "}
             <a
-              href="https://github.com/linux-code-dev/KB_Learning/issues"
+              href="https://github.com/linux-code-os/kb-learning/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-emerald-500 hover:underline"

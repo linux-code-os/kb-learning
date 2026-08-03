@@ -52,3 +52,20 @@ prompt
 server.log
 # Skills directory
 /skills/
+# Internal project context (not for public repo)
+worklog.md
+.zscripts/
+skills/
+tests/
+examples/
+mini-services/
+download/
+upload/
+prisma/
+db/
+verify-*.png
+v*-*.png
+qa-*.png
+*.bak
+next.config.ts.bak
+next.dev.config.ts.bak

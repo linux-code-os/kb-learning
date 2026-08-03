@@ -1,7 +1,7 @@
 # Деплой сайта KB Learning на GitHub Pages (статический экспорт)
 #
 # При пуше в main автоматически: собирает статический сайт → публикует на Pages.
-# URL: https://linux-code-dev.github.io/KB_Learning/
+# URL: https://linux-code-os.github.io/kb-learning/
 #
 # Что работает на GitHub Pages (статика):
 #   ✓ Все секции сайта (hero, simulator, converter, cross-rates, FAQ, и т.д.)
@@ -43,9 +43,9 @@ jobs:
 
       - name: Build static export
         env:
-          # Базовый путь для project pages: /KB_Learning
+          # Базовый путь для project pages: /kb-learning
           # Для user/org pages (username.github.io) — закомментируйте.
-          NEXT_PUBLIC_BASE_PATH: /KB_Learning
+          NEXT_PUBLIC_BASE_PATH: /kb-learning
         run: bun run build:pages
 
       - name: Add .nojekyll

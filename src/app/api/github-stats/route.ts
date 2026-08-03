@@ -38,11 +38,11 @@ export async function GET() {
     }
 
     const [repoRes, userRes] = await Promise.all([
-      fetch("https://api.github.com/repos/linux-code-dev/KB_Learning", {
+      fetch("https://api.github.com/repos/linux-code-os/kb-learning", {
         headers,
         next: { revalidate: 900 },
       }),
-      fetch("https://api.github.com/users/linux-code-dev", {
+      fetch("https://api.github.com/users/linux-code-os", {
         headers,
         next: { revalidate: 900 },
       }),

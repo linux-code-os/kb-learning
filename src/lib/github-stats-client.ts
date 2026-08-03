@@ -15,8 +15,8 @@ export type GhStats = {
   publicRepos: number;
 };
 
-const REPO = "linux-code-dev/KB_Learning";
-const USER = "linux-code-dev";
+const REPO = "linux-code-os/kb-learning";
+const USER = "linux-code-os";
 const TTL = 15 * 60 * 1000;
 
 let cache: { data: GhStats; ts: number } | null = null;

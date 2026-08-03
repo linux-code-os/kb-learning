@@ -60,7 +60,7 @@ export function Architecture() {
                 <span className="h-3 w-3 rounded-full bg-emerald-500/70" />
                 <span className="ml-2 inline-flex items-center gap-1.5 text-xs text-white/50">
                   <FolderTree className="h-3.5 w-3.5" />
-                  KB_Learning
+                  kb-learning
                 </span>
               </div>
               <pre className="overflow-x-auto p-5 font-mono text-[13px] leading-relaxed text-white/80">

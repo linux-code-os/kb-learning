@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://linux-code-dev.github.io"),
+  metadataBase: new URL("https://linux-code-os.github.io"),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
     template: `%s · ${siteConfig.name}`,
@@ -25,42 +25,27 @@ export const metadata: Metadata = {
   description: siteConfig.description.ru,
   keywords: [
     "KB Learning",
-    "KB Learning",
     "криптовалюта",
     "обучение",
     "Kotlin Multiplatform",
     "Compose",
     "трейдинг симулятор",
     "крипто портфель",
-    "Aleksey Balandin",
   ],
   authors: [{ name: siteConfig.owner.name, url: siteConfig.github }],
   creator: siteConfig.owner.name,
-  icons: {
-    icon: "/favicon.svg",
-  },
   openGraph: {
     title: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
     description: siteConfig.description.ru,
-    url: "https://linux-code-dev.github.io/KB_Learning/",
+    url: "https://linux-code-os.github.io/kb-learning/",
     siteName: siteConfig.name,
     type: "website",
     locale: "ru_RU",
-    images: [
-      {
-        // Статичный SVG — работает на GitHub Pages без API route.
-        url: "/og.svg",
-        width: 1200,
-        height: 630,
-        alt: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
     description: siteConfig.description.ru,
-    images: ["/og.svg"],
   },
 };
 
