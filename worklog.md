@@ -551,3 +551,59 @@ Task: Assess current project status, perform QA via agent-browser, then add live
 - **Zustand store**: сейчас только coins. Можно вынести balance/holdings/trades тоже в store, чтобы CrossRates мог показывать total portfolio value.
 
 Приоритет следующего раунда: Lighthouse performance audit + lazy-mount нижних секций, либо trade history filtering (табы all/buy/sell/by-coin), либо column/row highlighting в cross-rates matrix.
+
+---
+Task ID: 10
+Agent: main (Z.ai Code) — cron webDevReview round 9
+Task: Assess current project status, perform QA via agent-browser, then add trade history filtering + cross-rates highlighting + styling polish.
+
+## Текущий статус проекта (оценка на старте раунда)
+- После раунда 9: 18 секций, Trade Simulator с live cross-rates + CSV export, lint чист.
+- Рекомендации прошлого раунда: trade history filtering, cross-rates highlighting, Lighthouse.
+
+## Цели и выполненные изменения
+
+**1. Trade history filtering** — `trade-simulator.tsx`
+- Новый state `tradeFilter: "all" | "buy" | "sell" | string` (string для фильтра по символу монеты).
+- `filteredTrades` useMemo — фильтрует по side или symbol.
+- `tradeSymbols` useMemo — уникальные символы из сделок для динамических табов фильтра.
+- UI: группа фильтр-табов с `aria-pressed`: [Все] [Покупки] [Продажи] [BTC] [ETH] ... (динамические по символам из сделок).
+- Цветовое кодирование: buy/sell табы — emerald/rose при активации; coin-табы — emerald.
+- При активном фильтре показывает "показано: N / M" (filteredTrades.length / trades.length).
+- При пустом результате фильтра — "показано: 0".
+- Записи сделок получили `hover:bg-muted/50` для лучшего hover-эффекта.
+- 5 новых translation keys: sim.filterAll, sim.filterBuy, sim.filterSell, sim.filterByCoin, sim.filteredCount.
+
+**2. Cross-rates row/column highlighting** — `cross-rates.tsx`
+- Новый state `hoverRow` / `hoverCol` (number | null).
+- Заголовки колонок и строк подсвечиваются emerald при hover.
+- Ячейки: при hover на ячейку подсвечивается вся строка + вся колонка (как в Excel) — `bg-emerald-500/10 text-emerald-500` на пересечении.
+- Диагональ (same coin) не подсвечивается.
+- `transition-colors duration-100` для плавности.
+- Описание обновлено: "Наведите на ячейку, чтобы подсветить строку и колонку" (RU/EN).
+
+## Результаты верификации (agent-browser)
+- **18 секций**, 0 ошибок браузера, 0 проблем в консоли, lint чист.
+- **Trade history filtering**:
+  - Создал 3 сделки: buy 0.1 BTC, buy 0.5 ETH, sell 0.05 BTC.
+  - Фильтр-табы: [Все, Покупки, Продажи, BTC, ETH] (динамические по символам).
+  - Клик "Продажи" → показывает 1 из 3 (только sell).
+  - Клик "BTC" → показывает 2 из 3 (buy BTC + sell BTC, ETH отфильтрован).
+  - "показано: N / M" корректно отображается.
+- **Cross-rates highlighting**:
+  - 42 ячейки в матрице.
+  - Hover на ячейку BTC→ETH → 10 ячеек подсвечено (строка + колонка, emerald).
+  - Диагональ не подсвечивается.
+- **Адаптив**: моб 390×844 — 0 горизонтального скролла.
+- **VLM-оценка** фильтров: **8/10** — "filter tabs clearly visible, filtered count present, clean dark theme, intuitive color-coding".
+- **Lint**: 0 ошибок, 0 предупреждений.
+
+## Нерешённые вопросы / риски / рекомендации на следующий раунд
+- **Lighthouse performance audit**: всё ещё не прогонял. 18 секций + live store + фильтры — стоит проверить LCP/CLS/TBT формально.
+- **Static export для GitHub Pages**: `output: "export"` несовместим с API routes. Нужно вынести github-stats в клиентский fetch (CORS) + сторонний сервис для subscribe.
+- **Trade history search**: можно добавить текстовый поиск по журналу (по symbol/amount/price).
+- **Cross-rates click-to-copy**: при клике на ячейку можно копировать значение в буфер обмена.
+- **Dev-server нестабилен**: sandbox убивает процесс. Нужен supervisor.
+- **Keyboard navigation в matrix**: hover работает мышью, но keyboard nav через tab по ячейкам не настроен.
+
+Приоритет следующего раунда: Lighthouse performance audit + lazy-mount нижних секций, либо click-to-copy в cross-rates, либо текстовый поиск в trade history.

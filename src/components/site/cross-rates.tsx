@@ -40,6 +40,10 @@ export function CrossRates() {
 
   const isLive = liveCoins.length > 0;
 
+  // Hover-подсветка строки и колонки (как в Excel)
+  const [hoverRow, setHoverRow] = React.useState<number | null>(null);
+  const [hoverCol, setHoverCol] = React.useState<number | null>(null);
+
   return (
     <section id="rates" className="relative py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -90,7 +94,7 @@ export function CrossRates() {
               )}
             </div>
 
-            {/* Матрица */}
+            {/* Матрица с hover-подсветкой */}
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-center text-xs sm:text-sm">
                 <thead>
@@ -98,10 +102,14 @@ export function CrossRates() {
                     <th className="sticky left-0 z-10 bg-card/80 p-2 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground backdrop-blur">
                       {pick({ ru: "из ↓ / в →", en: "from ↓ / to →" }, lang)}
                     </th>
-                    {coins.map((c) => (
+                    {coins.map((c, ci) => (
                       <th
                         key={c.symbol}
-                        className="p-2 text-[11px] font-bold text-foreground"
+                        onMouseEnter={() => setHoverCol(ci)}
+                        onMouseLeave={() => setHoverCol(null)}
+                        className={`p-2 text-[11px] font-bold transition-colors ${
+                          hoverCol === ci ? "text-emerald-500" : "text-foreground"
+                        }`}
                       >
                         {c.symbol}
                       </th>
@@ -109,21 +117,39 @@ export function CrossRates() {
                   </tr>
                 </thead>
                 <tbody>
-                  {coins.map((from) => (
+                  {coins.map((from, ri) => (
                     <tr key={from.symbol} className="border-t border-border/40">
-                      <td className="sticky left-0 z-10 bg-card/80 p-2 text-left text-[11px] font-bold backdrop-blur">
+                      <td
+                        onMouseEnter={() => setHoverRow(ri)}
+                        onMouseLeave={() => setHoverRow(null)}
+                        className={`sticky left-0 z-10 bg-card/80 p-2 text-left text-[11px] font-bold backdrop-blur transition-colors ${
+                          hoverRow === ri ? "text-emerald-500" : ""
+                        }`}
+                      >
                         {from.symbol}
                       </td>
-                      {coins.map((to) => {
+                      {coins.map((to, ci) => {
                         const rate = from.price / to.price;
                         const isSelf = from.symbol === to.symbol;
+                        const isHighlighted =
+                          !isSelf && (hoverRow === ri || hoverCol === ci);
                         return (
                           <td
                             key={to.symbol}
-                            className={`p-2 font-mono tabular-nums transition-colors ${
+                            onMouseEnter={() => {
+                              setHoverRow(ri);
+                              setHoverCol(ci);
+                            }}
+                            onMouseLeave={() => {
+                              setHoverRow(null);
+                              setHoverCol(null);
+                            }}
+                            className={`p-2 font-mono tabular-nums transition-colors duration-100 ${
                               isSelf
                                 ? "text-muted-foreground/40"
-                                : "text-foreground/80"
+                                : isHighlighted
+                                  ? "rounded bg-emerald-500/10 text-emerald-500"
+                                  : "text-foreground/80"
                             }`}
                           >
                             {isSelf ? "—" : formatRate(rate)}
@@ -140,8 +166,8 @@ export function CrossRates() {
               {isLive
                 ? pick(
                     {
-                      ru: "Цены обновляются каждые 2.5 сек из симулятора выше.",
-                      en: "Prices refresh every 2.5s from the simulator above.",
+                      ru: "Цены обновляются каждые 2.5 сек из симулятора выше. Наведите на ячейку, чтобы подсветить строку и колонку.",
+                      en: "Prices refresh every 2.5s from the simulator above. Hover a cell to highlight its row and column.",
                     },
                     lang,
                   )

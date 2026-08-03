@@ -340,6 +340,11 @@ export const translations = {
   "sim.exportCsv": { ru: "Экспорт CSV", en: "Export CSV" },
   "sim.buyShort": { ru: "Пок.", en: "Buy" },
   "sim.sellShort": { ru: "Прод.", en: "Sell" },
+  "sim.filterAll": { ru: "Все", en: "All" },
+  "sim.filterBuy": { ru: "Покупки", en: "Buys" },
+  "sim.filterSell": { ru: "Продажи", en: "Sells" },
+  "sim.filterByCoin": { ru: "По монете", en: "By coin" },
+  "sim.filteredCount": { ru: "показано", en: "shown" },
 } as const;
 
 export type Lang = "ru" | "en";

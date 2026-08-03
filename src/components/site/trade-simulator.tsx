@@ -165,6 +165,7 @@ export function TradeSimulator() {
   const [amount, setAmount] = React.useState("");
   const [limitPrice, setLimitPrice] = React.useState("");
   const [toast, setToast] = React.useState<{ msg: string; type: "ok" | "err" } | null>(null);
+  const [tradeFilter, setTradeFilter] = React.useState<"all" | "buy" | "sell" | string>("all");
   const [coinCount, setCoinCount] = React.useState<6 | 9 | 12>(() => {
     try {
       const saved = localStorage.getItem("kb-sim-coin-count");
@@ -480,6 +481,21 @@ export function TradeSimulator() {
 
   const pnlPositive = totalPnl >= 0;
 
+  // Фильтрация сделок для журнала
+  const filteredTrades = React.useMemo(() => {
+    if (tradeFilter === "all") return trades;
+    if (tradeFilter === "buy") return trades.filter((tr) => tr.side === "buy");
+    if (tradeFilter === "sell") return trades.filter((tr) => tr.side === "sell");
+    // иначе — фильтр по символу монеты
+    return trades.filter((tr) => tr.symbol === tradeFilter);
+  }, [trades, tradeFilter]);
+
+  // Уникальные символы из сделок для фильтра "по монете"
+  const tradeSymbols = React.useMemo(
+    () => Array.from(new Set(trades.map((tr) => tr.symbol))),
+    [trades],
+  );
+
   return (
     <section id="simulator" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -709,57 +725,132 @@ export function TradeSimulator() {
                     </div>
                   )}
                 </div>
+
+                {/* Фильтры */}
+                {trades.length > 0 && (
+                  <div
+                    role="group"
+                    aria-label={t("sim.filterAll")}
+                    className="mb-3 flex flex-wrap items-center gap-1 rounded-lg border border-border/60 bg-muted/40 p-1"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setTradeFilter("all")}
+                      aria-pressed={tradeFilter === "all"}
+                      className={`rounded-md px-2 py-0.5 text-[11px] font-medium transition ${
+                        tradeFilter === "all"
+                          ? "bg-emerald-500/15 text-emerald-500"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {t("sim.filterAll")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTradeFilter("buy")}
+                      aria-pressed={tradeFilter === "buy"}
+                      className={`rounded-md px-2 py-0.5 text-[11px] font-medium transition ${
+                        tradeFilter === "buy"
+                          ? "bg-emerald-500/15 text-emerald-500"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {t("sim.filterBuy")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTradeFilter("sell")}
+                      aria-pressed={tradeFilter === "sell"}
+                      className={`rounded-md px-2 py-0.5 text-[11px] font-medium transition ${
+                        tradeFilter === "sell"
+                          ? "bg-rose-500/15 text-rose-500"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {t("sim.filterSell")}
+                    </button>
+                    {tradeSymbols.map((sym) => (
+                      <button
+                        key={sym}
+                        type="button"
+                        onClick={() => setTradeFilter(sym)}
+                        aria-pressed={tradeFilter === sym}
+                        className={`rounded-md px-2 py-0.5 text-[11px] font-medium tabular-nums transition ${
+                          tradeFilter === sym
+                            ? "bg-emerald-500/15 text-emerald-500"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {sym}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {trades.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
                     {t("sim.noTrades")}
                   </p>
+                ) : filteredTrades.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    {tradeFilter !== "all"
+                      ? `${t("sim.filteredCount")}: 0`
+                      : t("sim.noTrades")}
+                  </p>
                 ) : (
-                  <ul className="max-h-64 space-y-1.5 overflow-y-auto pr-1">
-                    {trades.map((tr) => {
-                      const pos = (tr.realizedPnl ?? 0) >= 0;
-                      return (
-                        <li
-                          key={tr.id}
-                          className="flex items-center justify-between gap-2 rounded-lg bg-muted/30 px-3 py-2 text-xs"
-                        >
-                          <div className="flex min-w-0 items-center gap-2">
-                            <Badge
-                              variant="secondary"
-                              className={`shrink-0 ${
-                                tr.side === "buy"
-                                  ? "bg-emerald-500/15 text-emerald-500"
-                                  : "bg-rose-500/15 text-rose-500"
-                              }`}
-                            >
-                              {tr.side === "buy" ? t("sim.buy") : t("sim.sell")}
-                            </Badge>
-                            <span className="font-semibold">{tr.symbol}</span>
-                            <span className="font-mono tabular-nums text-muted-foreground">
-                              {formatCoin(tr.amount)} @ {formatUsd(tr.price, tr.price < 1 ? 4 : 2)}
-                            </span>
-                          </div>
-                          <div className="flex shrink-0 items-center gap-2 text-right">
-                            {tr.realizedPnl != null && (
-                              <span
-                                className={`font-mono tabular-nums ${
-                                  pos ? "text-emerald-500" : "text-rose-500"
+                  <>
+                    {tradeFilter !== "all" && (
+                      <p className="mb-2 text-[11px] text-muted-foreground">
+                        {t("sim.filteredCount")}: {filteredTrades.length} / {trades.length}
+                      </p>
+                    )}
+                    <ul className="max-h-64 space-y-1.5 overflow-y-auto pr-1">
+                      {filteredTrades.map((tr) => {
+                        const pos = (tr.realizedPnl ?? 0) >= 0;
+                        return (
+                          <li
+                            key={tr.id}
+                            className="flex items-center justify-between gap-2 rounded-lg bg-muted/30 px-3 py-2 text-xs transition-colors hover:bg-muted/50"
+                          >
+                            <div className="flex min-w-0 items-center gap-2">
+                              <Badge
+                                variant="secondary"
+                                className={`shrink-0 ${
+                                  tr.side === "buy"
+                                    ? "bg-emerald-500/15 text-emerald-500"
+                                    : "bg-rose-500/15 text-rose-500"
                                 }`}
                               >
-                                {pos ? "+" : ""}
-                                {formatUsd(tr.realizedPnl)}
+                                {tr.side === "buy" ? t("sim.buy") : t("sim.sell")}
+                              </Badge>
+                              <span className="font-semibold">{tr.symbol}</span>
+                              <span className="font-mono tabular-nums text-muted-foreground">
+                                {formatCoin(tr.amount)} @ {formatUsd(tr.price, tr.price < 1 ? 4 : 2)}
                               </span>
-                            )}
-                            <span className="font-mono tabular-nums text-muted-foreground">
-                              {new Date(tr.executedAt).toLocaleTimeString(
-                                lang === "ru" ? "ru-RU" : "en-US",
-                                { hour: "2-digit", minute: "2-digit", second: "2-digit" },
+                            </div>
+                            <div className="flex shrink-0 items-center gap-2 text-right">
+                              {tr.realizedPnl != null && (
+                                <span
+                                  className={`font-mono tabular-nums ${
+                                    pos ? "text-emerald-500" : "text-rose-500"
+                                  }`}
+                                >
+                                  {pos ? "+" : ""}
+                                  {formatUsd(tr.realizedPnl)}
+                                </span>
                               )}
-                            </span>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                              <span className="font-mono tabular-nums text-muted-foreground">
+                                {new Date(tr.executedAt).toLocaleTimeString(
+                                  lang === "ru" ? "ru-RU" : "en-US",
+                                  { hour: "2-digit", minute: "2-digit", second: "2-digit" },
+                                )}
+                              </span>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </>
                 )}
               </div>
 
