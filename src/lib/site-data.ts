@@ -17,11 +17,11 @@ export const siteConfig = {
     en: "KB Learning is an educational project for learning cryptocurrencies: a trading simulator, converter, cross-rates, and a library of 17 topics. No real money. No risk. Just knowledge.",
   },
   // Главная ссылка на GitHub-репозиторий проекта
-  github: "https://github.com/linux-code-os",
-  flagshipRepo: "https://github.com/linux-code-os/kb-learning",
+  github: "https://github.com/linux-code-dev",
+  flagshipRepo: "https://github.com/linux-code-dev/KB_Learning",
   owner: {
-    name: "linux-code-os",
-    handle: "linux-code-os",
+    name: "linux-code-dev",
+    handle: "linux-code-dev",
     bio: {
       ru: "Software Engineer, интересуется системным программированием, криптографией и современными стеками.",
       en: "Software Engineer interested in systems programming, cryptography, and modern tech stacks.",
@@ -321,9 +321,9 @@ export type Social = {
 export const socials: Social[] = [
   {
     name: "GitHub",
-    href: "https://github.com/linux-code-os",
+    href: "https://github.com/linux-code-dev",
     icon: "github",
-    handle: "@linux-code-os",
+    handle: "@linux-code-dev",
     available: true,
   },
   {
@@ -568,88 +568,6 @@ export const demoCoins: { symbol: string; name: string; priceUsd: number }[] = [
   { symbol: "MATIC", name: "Polygon", priceUsd: 0.7102 },
   { symbol: "LINK", name: "Chainlink", priceUsd: 14.85 },
   { symbol: "USDT", name: "Tether", priceUsd: 1.0 },
-];
-
-/**
- * Testimonials — отзывы об обучающем проекте.
- * Помечены как «демо-отзыв» для честности: проект учебный.
- */
-export type Testimonial = {
-  quote: LocalStr;
-  name: LocalStr;
-  role: LocalStr;
-  avatarColor: string;
-  initials: string;
-  rating: number;
-};
-
-export const testimonials: Testimonial[] = [
-  {
-    quote: {
-      ru: "Наконец понял, чем отличаются лимитный и стоп-ордер. Тренировался на симуляторе неделю — без страха потерять деньги. Теперь читаю графики увереннее.",
-      en: "I finally understand the difference between a limit and a stop order. I practiced on the simulator for a week — with no fear of losing money. Now I read charts with more confidence.",
-    },
-    name: { ru: "Иван М.", en: "Ivan M." },
-    role: { ru: "Студент-разработчик", en: "Student developer" },
-    avatarColor: "from-emerald-500 to-teal-600",
-    initials: "ИМ",
-    rating: 5,
-  },
-  {
-    quote: {
-      ru: "Крипто-библиотека — топ. 17 тем в одном месте, от блокчейна до налогов. Не нужно гуглить по крупицам. Всё внутри приложения, офлайн.",
-      en: "The crypto library is top-notch. 17 topics in one place, from blockchain to taxes. No need to google in fragments. It's all inside the app, offline.",
-    },
-    name: { ru: "Анна К.", en: "Anna K." },
-    role: { ru: "Junior QA", en: "Junior QA" },
-    avatarColor: "from-amber-500 to-orange-600",
-    initials: "АК",
-    rating: 5,
-  },
-  {
-    quote: {
-      ru: "Один Kotlin-код на Android и iOS — это магия Compose Multiplatform. Смотрю исходники как образец архитектуры feature-пакетов с Koin.",
-      en: "One Kotlin codebase for Android and iOS — that's the magic of Compose Multiplatform. I read the source as a reference for feature-package architecture with Koin.",
-    },
-    name: { ru: "Дмитрий С.", en: "Dmitry S." },
-    role: { ru: "Android-разработчик", en: "Android developer" },
-    avatarColor: "from-rose-500 to-pink-600",
-    initials: "ДС",
-    rating: 5,
-  },
-  {
-    quote: {
-      ru: "Как новичок в крипте, боялся терминов вроде DeFi и токеномика. В приложении они разложены по полочкам. Без хайпа, по делу.",
-      en: "As a crypto beginner, I was intimidated by terms like DeFi and tokenomics. In the app they're laid out clearly. No hype, just the substance.",
-    },
-    name: { ru: "Мария В.", en: "Maria V." },
-    role: { ru: "Дизайнер", en: "Designer" },
-    avatarColor: "from-teal-500 to-cyan-600",
-    initials: "МВ",
-    rating: 4,
-  },
-  {
-    quote: {
-      ru: "Биометрический вход и JWT-сервер — приятный бонус к учебному проекту. Видно, что сделано с пониманием безопасности, а не «для галочки».",
-      en: "Biometric login and a JWT server are a nice bonus for a learning project. You can tell it's built with security in mind, not just \"for show\".",
-    },
-    name: { ru: "Павел Р.", en: "Pavel R." },
-    role: { ru: "Backend-разработчик", en: "Backend developer" },
-    avatarColor: "from-lime-500 to-emerald-600",
-    initials: "ПР",
-    rating: 5,
-  },
-  {
-    quote: {
-      ru: "Использую как песочницу для тестов торговых стратегий. Движок рынка в фоне честно исполняет ордера по тикам — не «нарисованная» прибыль.",
-      en: "I use it as a sandbox for testing trading strategies. The background market engine executes orders on ticks honestly — no \"painted\" profits.",
-    },
-    name: { ru: "Сергей Л.", en: "Sergey L." },
-    role: { ru: "Data-аналитик", en: "Data analyst" },
-    avatarColor: "from-violet-500 to-fuchsia-600",
-    initials: "СЛ",
-    rating: 5,
-  },
 ];
 
 /**

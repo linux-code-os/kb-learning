@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://linux-code-os.github.io"),
+  metadataBase: new URL("https://linux-code-dev.github.io"),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
     template: `%s · ${siteConfig.name}`,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${siteConfig.name} — ${siteConfig.tagline.ru}`,
     description: siteConfig.description.ru,
-    url: "https://linux-code-os.github.io/kb-learning/",
+    url: "https://linux-code-dev.github.io/KB_Learning/",
     siteName: siteConfig.name,
     type: "website",
     locale: "ru_RU",
