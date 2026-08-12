@@ -147,6 +147,21 @@ export const translations = {
     ru: "Код под composeApp разбит по фичам с примерным слоёнием data → domain → presentation, связан через Koin. Так легче тестировать и расширять.",
     en: "Code under composeApp is split by feature with a rough data → domain → presentation layering, wired through Koin. Easier to test and extend.",
   },
+  "arch.layer1.title": { ru: "composeApp", en: "composeApp" },
+  "arch.layer1.desc": {
+    ru: "Общий KMP-клиент. UI и бизнес-логика живут в commonMain, платформо-специфичные реализации — в androidMain и iosMain.",
+    en: "Shared KMP client. UI and business logic live in commonMain, platform-specific implementations — in androidMain and iosMain.",
+  },
+  "arch.layer2.title": { ru: "Feature-пакеты", en: "Feature packages" },
+  "arch.layer2.desc": {
+    ru: "portfolio, trade, chart, coins, watchlist, history, library, analytics, simulator, profile, dashboard — каждый со слоёванием data → domain → presentation.",
+    en: "portfolio, trade, chart, coins, watchlist, history, library, analytics, simulator, profile, dashboard — each layered with data → domain → presentation.",
+  },
+  "arch.layer3.title": { ru: "server", en: "server" },
+  "arch.layer3.desc": {
+    ru: "Ktor-бэкенд: авторизация, аккаунты пользователей, хеширование паролей и выдача JWT-токенов.",
+    en: "Ktor backend: auth, user accounts, password hashing, and JWT token issuing.",
+  },
 
   "library.eyebrow": { ru: "Крипто-библиотека", en: "Crypto library" },
   "library.title1": { ru: "тем — от", en: "topics — from" },

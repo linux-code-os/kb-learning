@@ -11,7 +11,6 @@ import { CryptoLibrary } from "@/components/site/crypto-library";
 import { Roadmap } from "@/components/site/roadmap";
 import { Faq } from "@/components/site/faq";
 import { GetStarted } from "@/components/site/get-started";
-import { ContactForm } from "@/components/site/contact-form";
 import { Connect } from "@/components/site/connect";
 import { Footer } from "@/components/site/footer";
 import { ScrollProgress } from "@/components/site/scroll-progress";
@@ -51,7 +50,6 @@ export default async function Home({
         <Faq lang={lang} />
         <SectionDivider className="my-4" />
         <GetStarted lang={lang} />
-        <ContactForm lang={lang} />
         <Connect lang={lang} />
       </main>
       <Footer lang={lang} />

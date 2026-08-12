@@ -153,20 +153,20 @@ export const features: Feature[] = [
  */
 export type Tech = {
   name: string;
-  category: string;
+  category: LocalStr;
   color: string;
-  description: string;
+  description: LocalStr;
 };
 
 export const techStack: Tech[] = [
-  { name: "Kotlin Multiplatform", category: "Язык", color: "#7F52FF", description: "Все платформы из одной кодовой базы" },
-  { name: "Compose Multiplatform", category: "UI", color: "#4285F4", description: "Декларативный UI, Material 3" },
-  { name: "Ktor", category: "Backend", color: "#FF6F00", description: "Auth-сервер, токены, хеширование" },
-  { name: "Koin", category: "DI", color: "#F6B73C", description: "Лёгкий dependency injection" },
-  { name: "Room (KMP)", category: "База данных", color: "#34495E", description: "Локальное хранение данных" },
-  { name: "Coil 3", category: "Изображения", color: "#311B92", description: "Загрузка и кеширование картинок" },
-  { name: "kotlinx.serialization", category: "Сериализация", color: "#7F52FF", description: "JSON и типобезопасные модели" },
-  { name: "kotlinx.datetime", category: "Время", color: "#7F52FF", description: "Кроссплатформенная работа со временем" },
+  { name: "Kotlin Multiplatform", category: { ru: "Язык", en: "Language" }, color: "#7F52FF", description: { ru: "Все платформы из одной кодовой базы", en: "All platforms from a single codebase" } },
+  { name: "Compose Multiplatform", category: { ru: "UI", en: "UI" }, color: "#4285F4", description: { ru: "Декларативный UI, Material 3", en: "Declarative UI, Material 3" } },
+  { name: "Ktor", category: { ru: "Backend", en: "Backend" }, color: "#FF6F00", description: { ru: "Auth-сервер, токены, хеширование", en: "Auth server, tokens, hashing" } },
+  { name: "Koin", category: { ru: "DI", en: "DI" }, color: "#F6B73C", description: { ru: "Лёгкий dependency injection", en: "Lightweight dependency injection" } },
+  { name: "Room (KMP)", category: { ru: "База данных", en: "Database" }, color: "#34495E", description: { ru: "Локальное хранение данных", en: "Local data storage" } },
+  { name: "Coil 3", category: { ru: "Изображения", en: "Images" }, color: "#311B92", description: { ru: "Загрузка и кеширование картинок", en: "Image loading and caching" } },
+  { name: "kotlinx.serialization", category: { ru: "Сериализация", en: "Serialization" }, color: "#7F52FF", description: { ru: "JSON и типобезопасные модели", en: "JSON and type-safe models" } },
+  { name: "kotlinx.datetime", category: { ru: "Время", en: "Time" }, color: "#7F52FF", description: { ru: "Кроссплатформенная работа со временем", en: "Cross-platform time handling" } },
 ];
 
 /**

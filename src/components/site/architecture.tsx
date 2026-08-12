@@ -4,44 +4,44 @@ import { motion } from "framer-motion";
 import { FolderTree, Layers, Server, Smartphone } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
 import { projectStructure } from "@/lib/site-data";
+import { useT } from "@/components/site/language-toggle";
 
 const layers = [
   {
     icon: Smartphone,
-    title: "composeApp",
-    description:
-      "Общий KMP-клиент. UI и бизнес-логика живут в commonMain, платформо-специфичные реализации — в androidMain и iosMain.",
+    titleKey: "arch.layer1.title" as const,
+    descKey: "arch.layer1.desc" as const,
     accent: "text-emerald-500 bg-emerald-500/15",
   },
   {
     icon: Layers,
-    title: "Feature-пакеты",
-    description:
-      "portfolio, trade, chart, coins, watchlist, history, library, analytics, simulator, profile, dashboard — каждый со слоёванием data → domain → presentation.",
+    titleKey: "arch.layer2.title" as const,
+    descKey: "arch.layer2.desc" as const,
     accent: "text-amber-500 bg-amber-500/15",
   },
   {
     icon: Server,
-    title: "server",
-    description:
-      "Ktor-бэкенд: авторизация, аккаунты пользователей, хеширование паролей и выдача JWT-токенов.",
+    titleKey: "arch.layer3.title" as const,
+    descKey: "arch.layer3.desc" as const,
     accent: "text-teal-500 bg-teal-500/15",
   },
 ];
 
 export function Architecture() {
+  const t = useT();
+
   return (
     <section id="architecture" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Архитектура"
+          eyebrow={t("arch.eyebrow")}
           title={
             <>
-              Понятная структура,{" "}
-              <span className="text-gradient-brand">слои по делу</span>
+              {t("arch.title1")}{" "}
+              <span className="text-gradient-brand">{t("arch.titleAccent")}</span>
             </>
           }
-          description="Код под composeApp разбит по фичам с примерным слоёнием data → domain → presentation, связан через Koin. Так легче тестировать и расширять."
+          description={t("arch.desc")}
         />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-5">
@@ -91,11 +91,11 @@ export function Architecture() {
                       <Icon className="h-5 w-5" />
                     </div>
                     <h3 className="font-mono text-sm font-bold">
-                      {layer.title}
+                      {t(layer.titleKey as any)}
                     </h3>
                   </div>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {layer.description}
+                    {t(layer.descKey as any)}
                   </p>
                 </div>
               );

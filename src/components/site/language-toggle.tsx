@@ -12,16 +12,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { translations, type Lang } from "@/lib/translations";
 
-export function useLang(): Lang {
+export function useLang(): { lang: Lang } {
   const params = useParams();
-  return (params?.lang as Lang) || "ru";
+  const lang = (params?.lang as Lang) || "ru";
+  return { lang };
 }
 
 /**
  * Возвращает функцию-переводчик t(key) для текущего языка.
  */
 export function useT() {
-  const lang = useLang();
+  const { lang } = useLang();
   return React.useCallback(
     (key: keyof typeof translations): string => {
       const entry = translations[key];
@@ -33,7 +34,7 @@ export function useT() {
 }
 
 export function LanguageToggle() {
-  const lang = useLang();
+  const { lang } = useLang();
   const t = useT();
   const router = useRouter();
   const pathname = usePathname();

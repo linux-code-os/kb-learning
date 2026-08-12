@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useCountUp } from "@/lib/use-count-up";
 import { siteConfig } from "@/lib/site-data";
 import { fetchGhStats } from "@/lib/github-stats-client";
+import { useLang, useT } from "@/components/site/language-toggle";
 
 type Stats = {
   stars: number;
@@ -102,6 +103,8 @@ function StatCard({
 export function GitHubStats() {
   const [stats, setStats] = React.useState<Stats | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const { lang } = useLang();
+  const t = useT();
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -125,25 +128,25 @@ export function GitHubStats() {
     ? [
         {
           icon: Star,
-          label: "Звёзд на GitHub",
+          label: t("gh.stars"),
           value: stats.stars,
           accent: "bg-amber-500",
         },
         {
           icon: GitFork,
-          label: "Форков",
+          label: t("gh.forks"),
           value: stats.forks,
           accent: "bg-emerald-500",
         },
         {
           icon: CircleDot,
-          label: "Открытых issue",
+          label: t("gh.issues"),
           value: stats.openIssues,
           accent: "bg-teal-500",
         },
         {
           icon: FolderGit2,
-          label: "Публичных репо",
+          label: t("gh.repos"),
           value: stats.publicRepos,
           accent: "bg-rose-500",
         },
@@ -158,14 +161,14 @@ export function GitHubStats() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="GitHub в живую"
+          eyebrow={t("gh.eyebrow")}
           title={
             <>
-              Прозрачно.{" "}
-              <span className="text-gradient-brand">Как open-source</span>
+              {t("gh.title")}{" "}
+              <span className="text-gradient-brand">{t("gh.titleAccent")}</span>
             </>
           }
-          description="Метрики репозитория KB Learning тянутся напрямую из GitHub API в реальном времени. Обновляется каждые 15 минут — без накруток и красивых циферок."
+          description={t("gh.desc")}
         />
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -205,14 +208,14 @@ export function GitHubStats() {
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground sm:justify-start">
               <span className="inline-flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                Язык:{" "}
+                {t("gh.language")}{" "}
                 <span className="font-semibold text-foreground">
                   {stats.language ?? "Kotlin"}
                 </span>
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Eye className="h-3.5 w-3.5" />
-                Последний пуш:{" "}
+                {t("gh.lastPush")}{" "}
                 <span className="font-semibold text-foreground">
                   {timeAgo(stats.updatedAt)}
                 </span>
@@ -227,7 +230,7 @@ export function GitHubStats() {
               <RefreshCw
                 className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
               />
-              Обновить
+              {t("gh.refresh")}
             </Button>
           </motion.div>
         )}
@@ -243,7 +246,7 @@ export function GitHubStats() {
               rel="noopener noreferrer"
             >
               <Github className="h-4 w-4" />
-              Зайти в репозиторий
+              {t("gh.visitRepo")}
             </a>
           </Button>
         </div>

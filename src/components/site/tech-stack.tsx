@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/site/section-heading";
 import { techStack } from "@/lib/site-data";
-import { useT } from "@/components/site/language-toggle";
+import { useT, useLang } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
 
 function TechBadge({
   name,
@@ -24,6 +25,7 @@ function TechBadge({
 }
 
 export function TechStack() {
+  const { lang } = useLang();
   const t = useT();
   // дублируем для бесшовной ленты
   const marquee = [...techStack, ...techStack];
@@ -77,14 +79,14 @@ export function TechStack() {
                     style={{ backgroundColor: tech.color }}
                   />
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    {tech.category}
+                    {pick(tech.category, lang)}
                   </span>
                 </div>
                 <h3 className="mt-2 text-base font-bold leading-tight">
                   {tech.name}
                 </h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                  {tech.description}
+                  {pick(tech.description, lang)}
                 </p>
               </div>
             </motion.div>

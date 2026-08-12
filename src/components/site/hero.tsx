@@ -8,7 +8,7 @@ import {
   ArrowDown,
   Sparkles,
   ShieldCheck,
-  Smartphone,
+  MonitorSmartphone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { siteConfig, stats } from "@/lib/site-data";
@@ -195,7 +195,7 @@ export function Hero() {
               {t("hero.trust.noMoney")}
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Smartphone className="h-3.5 w-3.5 text-amber-500" />
+              <MonitorSmartphone className="h-3.5 w-3.5 text-amber-500" />
               {t("hero.trust.crossPlatform")}
             </span>
             <span className="inline-flex items-center gap-1.5">
