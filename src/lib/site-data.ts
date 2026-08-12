@@ -381,7 +381,6 @@ export const navLinks: { href: string; labelKey: string }[] = [
   { href: "#features", labelKey: "nav.features" },
   { href: "#tech", labelKey: "nav.tech" },
   { href: "#library", labelKey: "nav.library" },
-  { href: "#simulator", labelKey: "nav.simulator" },
   { href: "#roadmap", labelKey: "nav.roadmap" },
   { href: "#faq", labelKey: "nav.faq" },
   { href: "#start", labelKey: "nav.start" },

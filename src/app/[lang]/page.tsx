@@ -8,8 +8,6 @@ import { Features } from "@/components/site/features";
 import { TechStack } from "@/components/site/tech-stack";
 import { Architecture } from "@/components/site/architecture";
 import { CryptoLibrary } from "@/components/site/crypto-library";
-import { TradeSimulator } from "@/components/site/trade-simulator";
-import { CrossRates } from "@/components/site/cross-rates";
 import { Roadmap } from "@/components/site/roadmap";
 import { Faq } from "@/components/site/faq";
 import { GetStarted } from "@/components/site/get-started";
@@ -21,37 +19,43 @@ import { BackToTop } from "@/components/site/back-to-top";
 import { SkipLink } from "@/components/site/skip-link";
 import { SectionDivider } from "@/components/site/section-divider";
 
-export default function Home() {
+import { type Lang } from "@/lib/translations";
+
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ lang: Lang }> | { lang: Lang };
+}) {
+  const resolvedParams = await Promise.resolve(params);
+  const lang = resolvedParams.lang;
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <SkipLink />
+      <SkipLink lang={lang} />
       <ScrollProgress />
-      <Header />
+      <Header lang={lang} />
       <main id="main" className="flex-1">
-        <Hero />
-        <Ticker />
-        <GitHubStats />
-        <About />
+        <Hero lang={lang} />
+        <Ticker lang={lang} />
+        <GitHubStats lang={lang} />
+        <About lang={lang} />
         <SectionDivider className="my-4" />
-        <Audience />
+        <Audience lang={lang} />
         <SectionDivider className="my-4" />
-        <Features />
-        <TechStack />
-        <Architecture />
-        <CryptoLibrary />
+        <Features lang={lang} />
+        <TechStack lang={lang} />
+        <Architecture lang={lang} />
+        <CryptoLibrary lang={lang} />
         <SectionDivider className="my-4" />
-        <TradeSimulator />
-        <CrossRates />
+        <Roadmap lang={lang} />
+        <Faq lang={lang} />
         <SectionDivider className="my-4" />
-        <Roadmap />
-        <Faq />
-        <SectionDivider className="my-4" />
-        <GetStarted />
-        <ContactForm />
-        <Connect />
+        <GetStarted lang={lang} />
+        <ContactForm lang={lang} />
+        <Connect lang={lang} />
       </main>
-      <Footer />
-      <BackToTop />
+      <Footer lang={lang} />
+      <BackToTop lang={lang} />
     </div>
   );
 }

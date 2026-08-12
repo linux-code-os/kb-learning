@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Languages } from "lucide-react";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,22 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { translations, type Lang } from "@/lib/translations";
 
-type Ctx = { lang: Lang; setLang: (l: Lang) => void };
-const LanguageContext = React.createContext<Ctx>({
-  lang: "ru",
-  setLang: () => {},
-});
-
-export function useLang() {
-  return React.useContext(LanguageContext);
+export function useLang(): Lang {
+  const params = useParams();
+  return (params?.lang as Lang) || "ru";
 }
 
 /**
  * Возвращает функцию-переводчик t(key) для текущего языка.
- * Если ключ не найден — возвращает сам ключ (для отладки).
  */
 export function useT() {
-  const { lang } = useLang();
+  const lang = useLang();
   return React.useCallback(
     (key: keyof typeof translations): string => {
       const entry = translations[key];
@@ -37,44 +32,27 @@ export function useT() {
   );
 }
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = React.useState<Lang>("ru");
+export function LanguageToggle() {
+  const lang = useLang();
+  const t = useT();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const setLang = React.useCallback((l: Lang) => {
-    setLangState(l);
+  const setLang = (l: Lang) => {
     try {
       localStorage.setItem("kb-lang", l);
     } catch {
-      /* SSR или приватный режим */
+      // ignore
     }
-    // Обновляем <html lang> для скринридеров
-    if (typeof document !== "undefined") {
-      document.documentElement.lang = l;
+    if (!pathname) {
+      router.push(`/${l}`);
+      return;
     }
-  }, []);
+    // Заменяем текущий язык в URL на выбранный
+    const newPath = pathname.replace(`/${lang}`, `/${l}`);
+    router.push(newPath);
+  };
 
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem("kb-lang") as Lang | null;
-      if (saved === "en" || saved === "ru") {
-        setLangState(saved);
-        document.documentElement.lang = saved;
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  return (
-    <LanguageContext.Provider value={{ lang, setLang }}>
-      {children}
-    </LanguageContext.Provider>
-  );
-}
-
-export function LanguageToggle() {
-  const { lang, setLang } = useLang();
-  const t = useT();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
