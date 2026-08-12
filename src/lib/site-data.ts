@@ -172,14 +172,24 @@ export const techStack: Tech[] = [
 /**
  * Структура проекта KB Learning — для визуализации архитектуры.
  */
-export const projectStructure = `KB_Learning/
+export const projectStructure = {
+  ru: `KB_Learning/
 ├── composeApp/            # Общий KMP-клиент
 │   └── src/
 │       ├── commonMain/    # Общий UI + бизнес-логика
 │       ├── androidMain/   # Android-реализации
 │       └── iosMain/       # iOS-реализации
 ├── iosApp/                # Точка входа iOS (SwiftUI shell)
-└── server/                # Ktor-бэкенд: auth, аккаунты, токены`;
+└── server/                # Ktor-бэкенд: auth, аккаунты, токены`,
+  en: `KB_Learning/
+├── composeApp/            # Shared KMP client
+│   └── src/
+│       ├── commonMain/    # Shared UI + business logic
+│       ├── androidMain/   # Android implementations
+│       └── iosMain/       # iOS implementations
+├── iosApp/                # iOS entry point (SwiftUI shell)
+└── server/                # Ktor backend: auth, accounts, tokens`,
+};
 
 /**
  * Темы крипто-библиотеки внутри KB Learning (17 тем сгруппированы).

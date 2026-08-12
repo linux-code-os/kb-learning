@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { FolderTree, Layers, Server, Smartphone } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
 import { projectStructure } from "@/lib/site-data";
-import { useT } from "@/components/site/language-toggle";
+import { useLang, useT } from "@/components/site/language-toggle";
+import { pick } from "@/lib/translations";
 
 const layers = [
   {
@@ -28,6 +29,7 @@ const layers = [
 ];
 
 export function Architecture() {
+  const { lang } = useLang();
   const t = useT();
 
   return (
@@ -64,7 +66,7 @@ export function Architecture() {
                 </span>
               </div>
               <pre className="overflow-x-auto p-5 font-mono text-[13px] leading-relaxed text-white/80">
-                <code>{projectStructure}</code>
+                <code>{pick(projectStructure, lang)}</code>
               </pre>
             </div>
           </motion.div>
