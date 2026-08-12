@@ -159,7 +159,7 @@ export type Tech = {
 };
 
 export const techStack: Tech[] = [
-  { name: "Kotlin Multiplatform", category: "Язык", color: "#7F52FF", description: "Android + iOS из одной кодовой базы" },
+  { name: "Kotlin Multiplatform", category: "Язык", color: "#7F52FF", description: "Все платформы из одной кодовой базы" },
   { name: "Compose Multiplatform", category: "UI", color: "#4285F4", description: "Декларативный UI, Material 3" },
   { name: "Ktor", category: "Backend", color: "#FF6F00", description: "Auth-сервер, токены, хеширование" },
   { name: "Koin", category: "DI", color: "#F6B73C", description: "Лёгкий dependency injection" },
@@ -368,7 +368,7 @@ export const socials: Social[] = [
  */
 export const stats: { value: number; suffix: string; label: string }[] = [
   { value: 17, suffix: "", label: "тем в крипто-библиотеке" },
-  { value: 2, suffix: "", label: "платформы из одной кодовой базы" },
+  { value: 4, suffix: "", label: "основные платформы (Desktop, Web, Mobile)" },
   { value: 8, suffix: "", label: "ключевых модулей приложения" },
   { value: 100, suffix: "%", label: "образовательный, без реальных денег" },
 ];
@@ -420,8 +420,8 @@ export const faqs: Faq[] = [
       en: "Which platforms does KB Learning support?",
     },
     answer: {
-      ru: "Android и iOS из одной кодовой базы Kotlin Multiplatform. Compose Multiplatform отрисовывает один и тот же UI на обеих платформах, а бизнес-логика живёт в общем модуле commonMain.",
-      en: "Android and iOS from a single Kotlin Multiplatform codebase. Compose Multiplatform renders the same UI on both platforms, and the business logic lives in the shared commonMain module.",
+      ru: "Доступно на всех платформах (Desktop, Web, Android, iOS) из одной кодовой базы Kotlin Multiplatform. Compose Multiplatform отрисовывает один и тот же UI везде, а бизнес-логика живёт в общем модуле commonMain.",
+      en: "Available on all platforms (Desktop, Web, Android, iOS) from a single Kotlin Multiplatform codebase. Compose Multiplatform renders the same UI everywhere, and the business logic lives in the shared commonMain module.",
     },
   },
   {

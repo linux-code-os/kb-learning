@@ -51,7 +51,7 @@ export const translations = {
   "hero.balance": { ru: "Общий баланс", en: "Total balance" },
   "hero.simulation": { ru: "Симуляция", en: "Simulation" },
   "hero.trust.noMoney": { ru: "Без реальных средств", en: "No real funds" },
-  "hero.trust.crossPlatform": { ru: "Android + iOS из одного кода", en: "Android + iOS, one codebase" },
+  "hero.trust.crossPlatform": { ru: "Все платформы из одного кода", en: "All platforms, one codebase" },
   "hero.trust.topics": { ru: "17 тем в библиотеке", en: "17 topics in library" },
 
   "stat.topics": { ru: "тем в крипто-библиотеке", en: "topics in crypto library" },
@@ -86,13 +86,13 @@ export const translations = {
   "about.title1": { ru: "KB Learning — крипто-портфель,", en: "KB Learning — a crypto portfolio" },
   "about.title2": { ru: "который учит", en: "that teaches" },
   "about.desc": {
-    ru: "Compose Multiplatform приложение для Android и iOS из одной кодовой базы Kotlin. Отслеживайте портфель, практикуйте сделки в безопасном симуляторе и изучайте основы криптовалют — от устройства блокчейна до чтения свечных графиков.",
-    en: "A Compose Multiplatform app for Android and iOS from a single Kotlin codebase. Track your portfolio, practice trades in a safe simulator, and learn crypto fundamentals — from how a blockchain works to reading candlestick charts.",
+    ru: "Compose Multiplatform приложение для всех платформ (Desktop, Web, Mobile) из одной кодовой базы Kotlin. Отслеживайте портфель, практикуйте сделки в безопасном симуляторе и изучайте основы криптовалют — от устройства блокчейна до чтения свечных графиков.",
+    en: "A Compose Multiplatform app for all platforms (Desktop, Web, Mobile) from a single Kotlin codebase. Track your portfolio, practice trades in a safe simulator, and learn crypto fundamentals — from how a blockchain works to reading candlestick charts.",
   },
-  "about.oneCodeTitle": { ru: "Один код — две платформы", en: "One code, two platforms" },
+  "about.oneCodeTitle": { ru: "Один код — все платформы", en: "One code, all platforms" },
   "about.oneCodeDesc": {
-    ru: "Kotlin Multiplatform делит бизнес-логику между Android и iOS, а Compose Multiplatform отрисовывает один и тот же UI. Это значит — меньше дублирования, быстрее фичи, консистентный опыт на обоих платформах.",
-    en: "Kotlin Multiplatform shares business logic between Android and iOS, while Compose Multiplatform renders the same UI. Less duplication, faster features, a consistent experience on both platforms.",
+    ru: "Kotlin Multiplatform делит бизнес-логику между всеми платформами, а Compose Multiplatform отрисовывает один и тот же UI. Это значит — меньше дублирования, быстрее фичи, консистентный опыт везде.",
+    en: "Kotlin Multiplatform shares business logic across all platforms, while Compose Multiplatform renders the same UI. Less duplication, faster features, a consistent experience everywhere.",
   },
   "about.eduTitle": { ru: "Образовательный проект", en: "Educational project" },
   "about.eduDesc": {
